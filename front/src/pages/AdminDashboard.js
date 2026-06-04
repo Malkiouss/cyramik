@@ -37,7 +37,7 @@ const statMeta = [
 ];
 
 const resourceConfig = {
-  commandes: { resource: 'orders', title: 'Commandes', fields: ['customer', 'email', 'total', 'status'], filter: 'status', creatable: false },
+  commandes: { resource: 'orders', title: 'Commandes', fields: ['customer', 'email', 'products', 'quantity', 'total', 'status'], filter: 'status', creatable: false },
   'paiements-square': { resource: 'orders', title: 'Paiements Square', fields: ['customer', 'total', 'paymentMethod', 'status'], creatable: false },
   ceramique: { resource: 'products', title: 'Ceramique', fields: ['name', 'price', 'stock', 'isActive'], formFields: ['name', 'description', 'price', 'stock'], category: 'ceramique', photoUpload: true, cardView: true, actionLabel: 'Nouveau produit' },
   goodies: { resource: 'products', title: 'Goodies / Lifestyle', fields: ['name', 'category', 'price', 'stock'], formFields: ['name', 'description', 'category', 'price', 'stock'], category: 'goodies', photoUpload: true, cardView: true, actionLabel: 'Nouveau produit' },
@@ -184,6 +184,10 @@ const formatCell = (field, value) => {
   if (typeof value === 'boolean') return value ? 'Actif' : 'Inactif';
   if (field.toLowerCase().includes('date') || field === 'expiresAt' || field === 'publishedAt') return value ? new Date(value).toLocaleDateString('fr-FR') : '-';
   if (field === 'price' || field === 'total' || field === 'value') return money(value);
+  if (field === 'status') {
+    const labels = { pending: 'En attente', confirmed: 'Approuvee', shipped: 'Expediee', delivered: 'Livree', cancelled: 'Annulee' };
+    return labels[value] || value || '-';
+  }
   return value ?? '-';
 };
 
@@ -339,6 +343,7 @@ export const AdminResourcePage = ({ type }) => {
       if ('isRead' in patch) await api.patch(`/${config.resource}/${id}/read`);
       else if ('published' in patch) await api.patch(`/${config.resource}/${id}/publish`);
       else if (config.resource === 'products' && 'isActive' in patch) await api.patch(`/${config.resource}/${id}/toggle`);
+      else if (config.resource === 'orders' && 'status' in patch) await api.patch(`/${config.resource}/${id}/status`, patch);
       else await api.patch(`/${config.resource}/${id}`, patch);
       load();
     } catch (err) {
@@ -468,6 +473,8 @@ export const AdminResourcePage = ({ type }) => {
                 {'isRead' in item && <button onClick={() => patchItem(item.id, { isRead: !item.isRead })} type="button">Lire</button>}
                 {'isActive' in item && <button onClick={() => patchItem(item.id, { isActive: !item.isActive })} type="button">{item.isActive ? 'Desactiver' : 'Activer'}</button>}
                 {'published' in item && <button onClick={() => patchItem(item.id, { published: !item.published })} type="button">Publier</button>}
+                {config.resource === 'orders' && item.status === 'pending' && <button onClick={() => patchItem(item.id, { status: 'confirmed' })} type="button">Approuver</button>}
+                {config.resource === 'orders' && item.status !== 'cancelled' && <button onClick={() => patchItem(item.id, { status: 'cancelled' })} type="button">Annuler</button>}
                 <button onClick={() => remove(item.id)} type="button" aria-label="Supprimer"><FiTrash2 /></button>
               </span>
             </article>

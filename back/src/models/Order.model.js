@@ -2,6 +2,11 @@ const mongoose = require('mongoose');
 
 const orderSchema = new mongoose.Schema({
   user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+  customerName: { type: String, trim: true },
+  customerEmail: { type: String, trim: true, lowercase: true },
+  customerPhone: { type: String, trim: true },
+  customerNote: { type: String, trim: true, default: '' },
+  source: { type: String, enum: ['admin', 'product-reservation'], default: 'admin' },
   items: [{
     product: { type: mongoose.Schema.Types.ObjectId, ref: 'Product' },
     quantity: { type: Number, required: true, min: 1 },

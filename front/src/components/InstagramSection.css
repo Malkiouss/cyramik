@@ -40,28 +40,111 @@
   box-shadow: 0 16px 30px rgba(79, 55, 41, 0.18);
 }
 
-.instagram-widget {
-  display: grid;
-  justify-items: center;
+.instagram-card {
   width: min(100%, 680px);
-  min-height: 420px;
   margin: 0 auto;
-  padding: 20px;
-  border-radius: 14px;
-  background: #fffaf1;
+  padding: 18px;
+  border: 1px solid rgba(103, 80, 61, 0.12);
+  border-radius: 18px;
+  background: #f5efe6;
   box-shadow: 0 18px 52px rgba(69, 45, 30, 0.12);
 }
 
-.instagram-widget .instagram-media {
+.instagram-profile {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 8px 8px 18px;
+}
+
+.instagram-profile-icon {
+  display: inline-grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  flex: 0 0 auto;
+  border-radius: 50%;
+  background: #ffffff;
+  color: #b45f43;
+  font-size: 1.35rem;
+  box-shadow: 0 8px 22px rgba(69, 45, 30, 0.1);
+}
+
+.instagram-profile-label {
+  margin: 0 0 3px;
+  color: rgba(49, 43, 35, 0.64);
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.instagram-profile h3 {
+  margin: 0;
+  color: var(--olive);
+  font-size: 1.18rem;
+}
+
+.instagram-follow {
+  margin-left: auto;
+  padding: 10px 18px;
+  border-radius: 999px;
+  background: #aeb78e;
+  color: #fffaf1;
+  font-size: 0.92rem;
+  font-weight: 900;
+  text-decoration: none;
+  box-shadow: 0 12px 24px rgba(79, 55, 41, 0.16);
+}
+
+.instagram-widget {
+  display: grid;
+  justify-items: center;
+  min-height: 420px;
+  padding: 18px;
+  border-radius: 14px;
+  background: #fffaf1;
+}
+
+.instagram-embed {
+  display: grid;
+  justify-items: center;
+  width: 100%;
+}
+
+.instagram-embed .instagram-media,
+.instagram-widget > .instagram-media {
   width: min(100%, 540px) !important;
   min-width: 0 !important;
   margin: 0 auto !important;
   background: #fff !important;
 }
 
-.instagram-widget .instagram-media a {
+.instagram-embed .instagram-media a,
+.instagram-widget > .instagram-media a,
+.instagram-fallback a {
   color: var(--olive);
   font-weight: 900;
+}
+
+.instagram-state,
+.instagram-fallback {
+  align-self: center;
+  max-width: 420px;
+  margin: 0;
+  color: var(--ink);
+  text-align: center;
+  line-height: 1.6;
+}
+
+.instagram-fallback {
+  display: grid;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.instagram-fallback p {
+  margin: 0;
 }
 
 @media (max-width: 680px) {
@@ -71,6 +154,22 @@
 
   .instagram-heading {
     margin-bottom: 32px;
+  }
+
+  .instagram-card {
+    padding: 12px;
+  }
+
+  .instagram-profile {
+    align-items: flex-start;
+    flex-wrap: wrap;
+    padding: 6px 4px 14px;
+  }
+
+  .instagram-follow {
+    width: 100%;
+    margin-left: 0;
+    text-align: center;
   }
 
   .instagram-widget {
