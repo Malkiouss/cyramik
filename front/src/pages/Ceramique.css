@@ -1,0 +1,205 @@
+.ceramique-page {
+  width: 100%;
+  padding: 152px 24px 110px;
+  background:
+    radial-gradient(circle at top right, rgba(156, 167, 125, 0.2), transparent 32rem),
+    #f6eddf;
+}
+
+.ceramique-hero {
+  display: grid;
+  justify-items: center;
+  gap: 22px;
+  max-width: 1100px;
+  margin: 0 auto 58px;
+  text-align: center;
+}
+
+.ceramique-hero .eyebrow,
+.ceramique-story .eyebrow,
+.ceramique-experience .eyebrow {
+  margin-bottom: 0;
+}
+
+.ceramique-hero .eyebrow {
+  display: none;
+}
+
+.ceramique-hero h1 {
+  max-width: 1000px;
+  color: var(--olive);
+  font-size: clamp(3rem, 7.5vw, 6.4rem);
+  line-height: 0.96;
+}
+
+.ceramique-hero p {
+  max-width: 920px;
+  margin: 0;
+  color: rgba(51, 37, 29, 0.7);
+  font-size: clamp(1rem, 1.7vw, 1.28rem);
+  line-height: 1.65;
+}
+
+.ceramique-booking-section {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 360px;
+  gap: 28px;
+  width: min(100%, 1180px);
+  margin: 0 auto;
+  align-items: start;
+}
+
+.ceramique-kicker {
+  margin: 0 0 18px;
+  color: rgba(51, 37, 29, 0.72);
+  font-weight: 800;
+}
+
+.ceramique-workshops {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.ceramique-workshops .item-card {
+  border-radius: 10px;
+  background: rgba(255, 250, 241, 0.78);
+  box-shadow: 0 20px 54px rgba(69, 45, 30, 0.12);
+}
+
+.ceramique-workshops .item-card img {
+  height: 210px;
+}
+
+.ceramique-workshops .item-card div {
+  padding: 20px;
+}
+
+.ceramique-workshops .item-card h3 {
+  color: var(--olive);
+  font-size: 1.75rem;
+}
+
+.ceramique-workshops .item-card p {
+  color: rgba(51, 37, 29, 0.7);
+}
+
+.ceramique-booking-section .form-card {
+  position: sticky;
+  top: 116px;
+  border-radius: 10px;
+  background: rgba(255, 250, 241, 0.84);
+}
+
+.ceramique-story {
+  display: grid;
+  grid-template-columns: minmax(0, 0.95fr) minmax(320px, 0.8fr);
+  gap: 44px;
+  width: min(100%, 1180px);
+  margin: 96px auto 0;
+  align-items: center;
+}
+
+.ceramique-copy h2 {
+  margin-top: 12px;
+  color: var(--olive);
+  font-size: clamp(2rem, 4vw, 4rem);
+}
+
+.ceramique-copy p {
+  margin: 18px 0 0;
+  color: rgba(51, 37, 29, 0.74);
+  font-size: 1.02rem;
+  line-height: 1.82;
+}
+
+.ceramique-story img,
+.ceramique-gallery img {
+  display: block;
+  width: 100%;
+  object-fit: cover;
+}
+
+.ceramique-story img {
+  aspect-ratio: 4 / 5;
+  border-radius: 10px;
+  box-shadow: 0 24px 70px rgba(69, 45, 30, 0.16);
+}
+
+.ceramique-experience {
+  width: min(100%, 1180px);
+  margin: 96px auto 0;
+}
+
+.ceramique-experience .section-heading {
+  margin-bottom: 34px;
+}
+
+.ceramique-values {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.ceramique-values article {
+  padding: 24px;
+  border: 1px solid rgba(104, 119, 79, 0.18);
+  border-radius: 10px;
+  background: rgba(255, 250, 241, 0.58);
+}
+
+.ceramique-values h3 {
+  color: var(--olive);
+  font-size: 1.7rem;
+}
+
+.ceramique-values p {
+  margin: 12px 0 0;
+  color: rgba(51, 37, 29, 0.72);
+  line-height: 1.72;
+}
+
+.ceramique-gallery {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 18px;
+  width: min(100%, 1180px);
+  margin: 74px auto 0;
+}
+
+.ceramique-gallery img {
+  aspect-ratio: 1 / 1.15;
+  border-radius: 10px;
+  box-shadow: 0 18px 48px rgba(69, 45, 30, 0.12);
+}
+
+@media (max-width: 1080px) {
+  .ceramique-booking-section,
+  .ceramique-story {
+    grid-template-columns: 1fr;
+  }
+
+  .ceramique-booking-section .form-card {
+    position: static;
+  }
+}
+
+@media (max-width: 920px) {
+  .ceramique-workshops,
+  .ceramique-values,
+  .ceramique-gallery {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 680px) {
+  .ceramique-page {
+    padding: 128px 16px 78px;
+  }
+
+  .ceramique-workshops,
+  .ceramique-values,
+  .ceramique-gallery {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,12 +1,15 @@
 import { useEffect, useState } from 'react';
-import { Link, NavLink } from 'react-router-dom';
+import { Link, NavLink, useLocation } from 'react-router-dom';
 import { FiMenu, FiShoppingBag, FiUser, FiX } from 'react-icons/fi';
 import { navLeft, navRight } from '../data/siteData';
 import './Navbar.css';
 
 const Navbar = () => {
+  const { pathname } = useLocation();
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+  const isHome = pathname === '/';
+  const showScrolledNavbar = !isHome || scrolled;
   const links = [...navLeft, ...navRight];
 
   useEffect(() => {
@@ -17,7 +20,7 @@ const Navbar = () => {
   }, []);
 
   return (
-    <header className={`navbar ${scrolled ? 'navbar--scrolled' : ''}`}>
+    <header className={`navbar ${showScrolledNavbar ? 'navbar--scrolled' : ''}`}>
       <nav className="nav-shell">
         <div className="nav-group nav-group--left">
           {navLeft.map((item) => (
@@ -27,7 +30,7 @@ const Navbar = () => {
 
         <Link to="/" className="brand" aria-label="Cyramik home">
           <img
-            src={scrolled ? '/coffee-arts-scrolled-logo.png' : '/logocof.png'}
+            src={showScrolledNavbar ? '/coffee-arts-scrolled-logo.png' : '/logocof.png'}
             alt="Coffee Arts Paris"
           />
         </Link>

@@ -4,7 +4,7 @@ const Evenements = () => (
   <main className="page page-offset">
     <section className="page-hero">
       <span className="eyebrow">Evenements</span>
-      <h1>Soirees creatives, brunchs et privatisations.</h1>
+      <h1>Evenements</h1>
       <p>Des rendez-vous chaleureux pour celebrer, apprendre et partager autour d une table.</p>
     </section>
     <div className="cards-grid">

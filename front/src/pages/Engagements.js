@@ -2,7 +2,7 @@ const Engagements = () => (
   <main className="page page-offset">
     <section className="page-hero">
       <span className="eyebrow">Nos engagements</span>
-      <h1>Faire beau, faire bon, faire durablement.</h1>
+      <h1>Nos engagements</h1>
       <p>Nous privilegions les fournisseurs responsables, les petites series, la reparation et les matieres choisies avec soin.</p>
     </section>
     <div className="values-grid">
