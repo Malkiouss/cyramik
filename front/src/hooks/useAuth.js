@@ -15,10 +15,15 @@ export const useAuth = () => {
     onSuccess: (user) => queryClient.setQueryData(['auth', 'me'], user),
   });
 
+  const register = useMutation({
+    mutationFn: async (payload) => unwrap(await api.post('/auth/register', payload)).user,
+    onSuccess: (user) => queryClient.setQueryData(['auth', 'me'], user),
+  });
+
   const logout = useMutation({
     mutationFn: async () => unwrap(await api.post('/auth/logout')),
     onSuccess: () => queryClient.removeQueries({ queryKey: ['auth'] }),
   });
 
-  return { user: me.data, getMe: me, login, logout };
+  return { user: me.data, getMe: me, login, register, logout };
 };

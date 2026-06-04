@@ -1,56 +1,56 @@
-import { FaInstagram } from 'react-icons/fa';
-import ceramic from '../assets/images/ceramic.svg';
-import { instagramPosts } from '../data/siteData';
+import { useEffect } from 'react';
 import './InstagramSection.css';
 
-const InstagramSection = () => (
-  <section className="instagram-section" aria-labelledby="instagram-title">
-    <div className="instagram-heading">
-      <h2 id="instagram-title">Instants Coffee Arts Paris</h2>
-      <p>
-        Nos dernieres inspirations, nos moments creatifs et la vie du cafe a retrouver sur Instagram.
-      </p>
-      <a
-        className="instagram-handle"
-        href="https://www.instagram.com/coffeearts.paris/"
-        target="_blank"
-        rel="noreferrer"
-      >
-        @coffeearts.paris
-      </a>
-    </div>
+const instagramUrl = 'https://www.instagram.com/coffeearts.paris/';
 
-    <div className="instagram-frame">
-      <div className="instagram-profile">
-        <div className="instagram-avatar">
-          <img src={ceramic} alt="Logo Coffee Arts Paris" />
-        </div>
-        <div className="instagram-meta">
-          <strong>coffeearts.paris</strong>
-          <span>COFFEE ARTS PARIS</span>
-          <span>7,579 followers</span>
-          <span>59 posts</span>
-        </div>
-        <FaInstagram className="instagram-icon" aria-hidden="true" />
+const InstagramSection = () => {
+  useEffect(() => {
+    const processEmbed = () => window.instgrm?.Embeds?.process?.();
+    const existingScript = document.querySelector('script[src="//www.instagram.com/embed.js"], script[src="https://www.instagram.com/embed.js"]');
+
+    if (existingScript) {
+      processEmbed();
+      return;
+    }
+
+    const script = document.createElement('script');
+    script.async = true;
+    script.src = 'https://www.instagram.com/embed.js';
+    script.onload = processEmbed;
+    document.body.appendChild(script);
+  }, []);
+
+  return (
+    <section className="instagram-section" aria-labelledby="instagram-title">
+      <div className="instagram-heading">
+        <h2 id="instagram-title">Instants Coffee Arts Paris</h2>
+        <p>
+          Nos dernieres inspirations, nos moments creatifs et la vie du cafe a retrouver sur Instagram.
+        </p>
+        <a
+          className="instagram-handle"
+          href={instagramUrl}
+          target="_blank"
+          rel="noreferrer"
+        >
+          @coffeearts.paris
+        </a>
       </div>
 
-      <div className="instagram-grid" aria-label="Apercu des publications Instagram">
-        {instagramPosts.map((post, index) => (
-          <a
-            className="instagram-post"
-            href="https://www.instagram.com/coffeearts.paris/"
-            target="_blank"
-            rel="noreferrer"
-            key={`${post.alt}-${index}`}
-            aria-label="Voir Coffee Arts Paris sur Instagram"
-          >
-            <img src={post.image} alt={post.alt} />
-            <span aria-hidden="true" />
+      <div className="instagram-widget">
+        <blockquote
+          className="instagram-media"
+          data-instgrm-captioned
+          data-instgrm-permalink={instagramUrl}
+          data-instgrm-version="14"
+        >
+          <a href={instagramUrl} target="_blank" rel="noreferrer">
+            Voir Coffee Arts Paris sur Instagram
           </a>
-        ))}
+        </blockquote>
       </div>
-    </div>
-  </section>
-);
+    </section>
+  );
+};
 
 export default InstagramSection;

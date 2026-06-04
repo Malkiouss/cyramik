@@ -19,20 +19,35 @@ const googleErrors = {
 const AdminLogin = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const { login } = useAuth();
-  const [form, setForm] = useState({ email: 'admin@coffeeartsparis.com', password: 'Admin1234!' });
+  const { login, register } = useAuth();
+  const [mode, setMode] = useState('login');
+  const [form, setForm] = useState({
+    name: 'Admin Coffee Arts Paris',
+    email: 'admin@coffeeartsparis.com',
+    password: 'Admin1234!',
+  });
   const [error, setError] = useState(googleErrors[searchParams.get('error')] || '');
   const [showPassword, setShowPassword] = useState(false);
+  const isSignup = mode === 'signup';
 
   const submit = async (event) => {
     event.preventDefault();
     setError('');
     try {
-      await login.mutateAsync(form);
+      if (isSignup) {
+        await register.mutateAsync(form);
+      } else {
+        await login.mutateAsync({ email: form.email, password: form.password });
+      }
       navigate('/admin');
     } catch (err) {
       setError(err.response?.data?.message || 'Connexion impossible');
     }
+  };
+
+  const changeMode = (nextMode) => {
+    setMode(nextMode);
+    setError('');
   };
 
   const continueWithGoogle = () => {
@@ -46,9 +61,34 @@ const AdminLogin = () => {
         <h1>Coffee Arts Paris</h1>
 
         <div className="login-tabs" aria-label="Authentification">
-          <button className="login-tab login-tab--active" type="button">Connexion</button>
-          <button className="login-tab" type="button">Inscription</button>
+          <button
+            className={`login-tab ${!isSignup ? 'login-tab--active' : ''}`}
+            type="button"
+            onClick={() => changeMode('login')}
+          >
+            Connexion
+          </button>
+          <button
+            className={`login-tab ${isSignup ? 'login-tab--active' : ''}`}
+            type="button"
+            onClick={() => changeMode('signup')}
+          >
+            Inscription
+          </button>
         </div>
+
+        {isSignup && (
+          <label className="login-field">
+            <span>Nom</span>
+            <input
+              value={form.name}
+              onChange={(event) => setForm({ ...form, name: event.target.value })}
+              placeholder="Nom"
+              type="text"
+              required
+            />
+          </label>
+        )}
 
         <label className="login-field">
           <span>Email</span>
@@ -80,7 +120,9 @@ const AdminLogin = () => {
         </label>
 
         {error && <span className="admin-error">{error}</span>}
-        <button className="login-submit" type="submit">Se connecter</button>
+        <button className="login-submit" type="submit" disabled={login.isPending || register.isPending}>
+          {isSignup ? 'Creer le compte' : 'Se connecter'}
+        </button>
 
         <div className="login-separator"><span>OU</span></div>
 
@@ -89,7 +131,12 @@ const AdminLogin = () => {
           Continuer avec Google
         </button>
 
-        <p className="login-signup">Pas encore de compte ? <button type="button">S'inscrire</button></p>
+        <p className="login-signup">
+          {isSignup ? 'Deja un compte ? ' : 'Pas encore de compte ? '}
+          <button type="button" onClick={() => changeMode(isSignup ? 'login' : 'signup')}>
+            {isSignup ? 'Se connecter' : "S'inscrire"}
+          </button>
+        </p>
       </form>
       <Link className="login-back-link" to="/">
         <FiArrowLeft />

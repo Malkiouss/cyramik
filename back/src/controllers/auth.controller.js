@@ -23,6 +23,12 @@ const loginRules = [
   body('password').notEmpty().withMessage('Password is required'),
 ];
 
+const registerRules = [
+  body('name').trim().notEmpty().withMessage('Name is required'),
+  body('email').isEmail().withMessage('Valid email is required'),
+  body('password').isLength({ min: 8 }).withMessage('Password must be at least 8 characters'),
+];
+
 const getClientUrl = () => (process.env.CLIENT_URL || 'http://localhost:3000').split(',')[0].trim().replace(/\/+$/, '');
 
 const requireGoogleConfig = () => {
@@ -36,6 +42,45 @@ const requireGoogleConfig = () => {
   }
 };
 
+const createSession = (res, user) => {
+  const token = generateToken(user);
+  res.cookie('accessToken', token, cookieOptions);
+  const userObject = user.toObject();
+  delete userObject.password;
+  sendSuccess(res, { user: toClient(userObject) });
+};
+
+const register = asyncHandler(async (req, res) => {
+  const { name, email, password } = req.body;
+  const normalizedEmail = String(email).toLowerCase();
+  const adminEmail = String(process.env.ADMIN_EMAIL || '').toLowerCase();
+
+  if (!adminEmail || normalizedEmail !== adminEmail) {
+    const error = new Error('Only the configured admin email can sign up here');
+    error.statusCode = 403;
+    throw error;
+  }
+
+  const existing = await User.findOne({ email: normalizedEmail }).select('+password');
+
+  if (existing?.password) {
+    const error = new Error('Email already registered');
+    error.statusCode = 409;
+    throw error;
+  }
+
+  const hashedPassword = await bcrypt.hash(password, 10);
+  const user = existing || new User({ email: normalizedEmail });
+
+  user.name = name;
+  user.password = hashedPassword;
+  user.role = 'admin';
+  user.isActive = true;
+  await user.save();
+
+  createSession(res, user);
+});
+
 const login = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
   const user = await User.findOne({ email: String(email).toLowerCase() }).select('+password');
@@ -46,11 +91,7 @@ const login = asyncHandler(async (req, res) => {
     throw error;
   }
 
-  const token = generateToken(user);
-  res.cookie('accessToken', token, cookieOptions);
-  const userObject = user.toObject();
-  delete userObject.password;
-  sendSuccess(res, { user: toClient(userObject) });
+  createSession(res, user);
 });
 
 const googleStart = asyncHandler(async (req, res) => {
@@ -144,4 +185,4 @@ const me = asyncHandler(async (req, res) => {
   sendSuccess(res, { user: toClient(req.user) });
 });
 
-module.exports = { loginRules, login, googleStart, googleCallback, logout, me };
+module.exports = { loginRules, registerRules, register, login, googleStart, googleCallback, logout, me };
