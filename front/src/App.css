@@ -19,7 +19,7 @@
 }
 
 .navbar--scrolled {
-  color: var(--ink);
+  color: var(--olive);
   background: rgba(248, 239, 223, 0.78);
   backdrop-filter: blur(18px);
   box-shadow: 0 10px 30px rgba(46, 34, 24, 0.08);
@@ -234,6 +234,15 @@ h3 {
   margin-bottom: 42px;
 }
 
+.section-heading {
+  display: grid;
+  justify-items: center;
+  gap: 18px;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+}
+
 .section-heading h2,
 .page-hero h1,
 .cta-copy h2 {
@@ -241,12 +250,29 @@ h3 {
   color: var(--brown);
 }
 
+.section-heading h2 {
+  color: var(--olive);
+  font-size: clamp(2rem, 3.8vw, 3.5rem);
+}
+
+.section-heading .eyebrow {
+  margin-bottom: 0;
+}
+
+.section-heading p,
 .page-hero p,
 .cta-copy p,
 .item-card p,
 .footer p {
   color: rgba(51, 37, 29, 0.74);
   line-height: 1.75;
+}
+
+.section-heading p {
+  max-width: 720px;
+  margin: 0;
+  color: var(--ink);
+  font-size: 0.98rem;
 }
 
 .experience-grid,
@@ -341,6 +367,154 @@ h3 {
   padding: 24px;
   background: rgba(255, 250, 241, 0.72);
   box-shadow: var(--shadow);
+}
+
+.instagram-section {
+  max-width: 1220px;
+  margin: 0 auto;
+  padding: 18px 24px 100px;
+}
+
+.instagram-heading {
+  display: grid;
+  justify-items: center;
+  gap: 18px;
+  margin: 0 auto 44px;
+  text-align: center;
+}
+
+.instagram-heading h2 {
+  color: var(--olive);
+  font-size: clamp(2rem, 3.8vw, 3.5rem);
+}
+
+.instagram-heading p {
+  max-width: 720px;
+  margin: 0;
+  color: var(--ink);
+  font-size: 0.98rem;
+  line-height: 1.7;
+}
+
+.instagram-handle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 184px;
+  margin-top: 18px;
+  padding: 16px 28px;
+  border-radius: 14px;
+  background: #aeb78e;
+  color: #fffaf1;
+  font-weight: 900;
+  box-shadow: 0 16px 30px rgba(79, 55, 41, 0.18);
+}
+
+.instagram-frame {
+  position: relative;
+  display: grid;
+  gap: 24px;
+  padding: 0 12px;
+}
+
+.instagram-frame::after {
+  content: '';
+  position: absolute;
+  top: 92px;
+  right: 0;
+  width: 7px;
+  height: calc(100% - 92px);
+  border-radius: 999px;
+  background: linear-gradient(#8f8f8f 0 94%, transparent 94%);
+  opacity: 0.65;
+}
+
+.instagram-profile {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 18px;
+  max-width: 1000px;
+  width: 100%;
+  margin: 0 auto;
+  padding-right: 28px;
+}
+
+.instagram-avatar {
+  display: grid;
+  place-items: center;
+  width: 94px;
+  height: 94px;
+  padding: 5px;
+  border-radius: 50%;
+  background: linear-gradient(45deg, #f6a800, #ff3d7f, #8b5cf6);
+}
+
+.instagram-avatar img {
+  width: 100%;
+  height: 100%;
+  padding: 14px;
+  border: 4px solid #f6eddf;
+  border-radius: 50%;
+  background: #aeb78e;
+  object-fit: contain;
+}
+
+.instagram-meta {
+  display: grid;
+  gap: 5px;
+  justify-items: start;
+  color: var(--ink);
+  font-size: 0.92rem;
+}
+
+.instagram-meta strong {
+  font-size: 0.95rem;
+}
+
+.instagram-icon {
+  color: #f04d93;
+  font-size: 1.55rem;
+}
+
+.instagram-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  max-width: 1060px;
+  margin: 0 auto;
+  overflow: hidden;
+  border-radius: 4px;
+  background: #fffaf1;
+  box-shadow: 0 18px 52px rgba(69, 45, 30, 0.12);
+}
+
+.instagram-post {
+  position: relative;
+  aspect-ratio: 1 / 0.86;
+  overflow: hidden;
+  border: 1px solid rgba(246, 237, 223, 0.85);
+}
+
+.instagram-post img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.45s ease;
+}
+
+.instagram-post:hover img {
+  transform: scale(1.06);
+}
+
+.instagram-post span {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 13px;
+  height: 13px;
+  border-radius: 3px;
+  border: 2px solid #fff;
+  box-shadow: -4px 4px 0 -1px #fff;
 }
 
 .cta-section {
@@ -527,7 +701,7 @@ textarea {
   grid-template-columns: 1.5fr repeat(3, 1fr);
   gap: 34px;
   padding: 70px 48px;
-  background: #33251d;
+  background: #58604C;
   color: var(--cream);
 }
 
@@ -592,6 +766,10 @@ textarea {
     grid-template-columns: 1fr;
   }
 
+  .instagram-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
   .admin-sidebar {
     position: static;
   }
@@ -654,7 +832,579 @@ textarea {
     padding: 28px;
   }
 
+  .instagram-section {
+    padding: 0 18px 70px;
+  }
+
+  .instagram-heading {
+    margin-bottom: 32px;
+  }
+
+  .instagram-profile {
+    grid-template-columns: auto minmax(0, 1fr);
+    padding-right: 0;
+  }
+
+  .instagram-avatar {
+    width: 74px;
+    height: 74px;
+  }
+
+  .instagram-icon {
+    display: none;
+  }
+
+  .instagram-frame::after {
+    display: none;
+  }
+
+  .instagram-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .instagram-post {
+    aspect-ratio: 1 / 0.78;
+  }
+
   .footer {
     padding: 48px 24px;
+  }
+}
+
+.coffee-admin {
+  --admin-cream: #fbf7ef;
+  --admin-panel: #fffdf8;
+  --admin-espresso: #2c1a0e;
+  --admin-sage: #6b8f71;
+  --admin-gold: #c9a84c;
+  --admin-terracotta: #b86f52;
+  --admin-sky: #55a6c8;
+  min-height: 100vh;
+  background: var(--admin-cream);
+  color: var(--admin-espresso);
+  font-family: 'Manrope', 'DM Sans', system-ui, sans-serif;
+}
+
+.coffee-admin-sidebar {
+  position: fixed;
+  inset: 0 auto 0 0;
+  z-index: 50;
+  width: 240px;
+  padding: 22px 14px;
+  overflow-y: auto;
+  background: var(--admin-espresso);
+  color: #fff8ea;
+  transition: transform 0.28s ease;
+}
+
+.coffee-admin-logo {
+  display: grid;
+  justify-items: center;
+  margin-bottom: 22px;
+  text-align: center;
+}
+
+.coffee-admin-logo img {
+  width: 92px;
+  height: auto;
+  margin-bottom: 8px;
+  filter: brightness(1.2);
+}
+
+.coffee-admin-logo strong {
+  color: #f4dd9f;
+  font-family: Georgia, 'Playfair Display', serif;
+  font-size: 1.25rem;
+}
+
+.coffee-admin-logo span {
+  color: rgba(255, 248, 234, 0.72);
+  font-size: 0.72rem;
+}
+
+.coffee-admin-sidebar nav {
+  display: grid;
+  gap: 5px;
+}
+
+.coffee-admin-sidebar a {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 11px 12px;
+  border-radius: 8px;
+  color: rgba(255, 248, 234, 0.82);
+  font-size: 0.88rem;
+  font-weight: 800;
+}
+
+.coffee-admin-sidebar a.active,
+.coffee-admin-sidebar a:hover {
+  background: rgba(201, 168, 76, 0.2);
+  color: #fff8ea;
+  box-shadow: inset 3px 0 0 var(--admin-gold);
+}
+
+.coffee-admin-shell {
+  min-height: 100vh;
+  padding-left: 240px;
+}
+
+.coffee-admin-topbar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: grid;
+  grid-template-columns: minmax(260px, 540px) 1fr;
+  align-items: center;
+  gap: 18px;
+  height: 58px;
+  padding: 0 24px 0 30px;
+  border-bottom: 1px solid rgba(44, 26, 14, 0.1);
+  background: rgba(251, 247, 239, 0.92);
+  backdrop-filter: blur(18px);
+}
+
+.admin-search {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 38px;
+  max-width: 450px;
+  border: 1px solid rgba(44, 26, 14, 0.14);
+  border-radius: 999px;
+  padding: 0 14px;
+  background: #fffdf8;
+}
+
+.admin-search input {
+  border: 0;
+  border-radius: 0;
+  padding: 0;
+  background: transparent;
+  outline: 0;
+}
+
+.admin-top-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 14px;
+}
+
+.admin-icon-button,
+.admin-logout,
+.admin-reset {
+  border: 0;
+  cursor: pointer;
+}
+
+.admin-icon-button {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--admin-espresso);
+}
+
+.admin-icon-button span {
+  position: absolute;
+  top: 6px;
+  right: 7px;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--admin-gold);
+}
+
+.admin-profile {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.admin-profile > span {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: var(--admin-sage);
+  color: #fff;
+  font-weight: 900;
+}
+
+.admin-profile div {
+  display: grid;
+  line-height: 1.15;
+}
+
+.admin-profile small {
+  color: rgba(44, 26, 14, 0.62);
+}
+
+.admin-reset {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border-radius: 8px;
+  padding: 10px 14px;
+  background: #d93434;
+  color: #fff;
+  font-weight: 900;
+}
+
+.admin-logout {
+  display: grid;
+  place-items: center;
+  background: transparent;
+  color: var(--admin-espresso);
+}
+
+.coffee-admin-content {
+  padding: 26px 30px 42px;
+}
+
+.admin-page-title {
+  margin-bottom: 26px;
+}
+
+.admin-page-title h1 {
+  color: var(--admin-espresso);
+  font-family: Georgia, 'Playfair Display', serif;
+  font-size: 2.1rem;
+}
+
+.admin-page-title p {
+  margin: 8px 0 0;
+  color: rgba(44, 26, 14, 0.72);
+  font-weight: 700;
+}
+
+.admin-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 22px;
+}
+
+.admin-stat-card,
+.admin-skeleton-card {
+  min-height: 116px;
+  border: 1px solid rgba(44, 26, 14, 0.08);
+  border-radius: 16px;
+  padding: 18px 20px;
+  background: var(--admin-panel);
+  box-shadow: 0 14px 34px rgba(44, 26, 14, 0.1);
+}
+
+.admin-skeleton-card {
+  background: linear-gradient(90deg, #fffdf8, #efe4d1, #fffdf8);
+  background-size: 220% 100%;
+  animation: admin-pulse 1.2s ease infinite;
+}
+
+.admin-stat-head {
+  display: flex;
+  justify-content: space-between;
+}
+
+.admin-stat-head svg {
+  font-size: 1.3rem;
+}
+
+.admin-stat-head button {
+  border: 0;
+  background: transparent;
+  color: rgba(44, 26, 14, 0.5);
+  cursor: pointer;
+}
+
+.admin-stat-card strong {
+  display: block;
+  margin-top: 18px;
+  color: #5f604c;
+  font-size: 1.9rem;
+  line-height: 1;
+}
+
+.admin-stat-card span {
+  display: block;
+  margin-top: 6px;
+  font-weight: 900;
+}
+
+.admin-stat-card small {
+  color: rgba(44, 26, 14, 0.66);
+  font-weight: 700;
+}
+
+.tone-revenue .admin-stat-head > svg,
+.tone-gifts .admin-stat-head > svg {
+  color: var(--admin-gold);
+}
+
+.tone-orders .admin-stat-head > svg,
+.tone-workshops .admin-stat-head > svg,
+.tone-products .admin-stat-head > svg {
+  color: var(--admin-sage);
+}
+
+.tone-users .admin-stat-head > svg,
+.tone-blogs .admin-stat-head > svg {
+  color: var(--admin-terracotta);
+}
+
+.tone-messages .admin-stat-head > svg,
+.tone-unread .admin-stat-head > svg {
+  color: var(--admin-sky);
+}
+
+.admin-crud-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+}
+
+.admin-primary-action,
+.admin-toolbar button,
+.admin-inline-form button,
+.admin-row-actions button {
+  border: 0;
+  border-radius: 9px;
+  background: var(--admin-sage);
+  color: #fff;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.admin-primary-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+}
+
+.admin-toolbar {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.admin-toolbar input {
+  max-width: 380px;
+  border-radius: 10px;
+  background: #fffdf8;
+}
+
+.admin-toolbar button,
+.admin-inline-form button {
+  padding: 0 14px;
+}
+
+.admin-inline-form {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.admin-inline-form input {
+  border-radius: 10px;
+}
+
+.admin-data-table,
+.admin-calendar-grid {
+  display: grid;
+  overflow: hidden;
+  border: 1px solid rgba(44, 26, 14, 0.1);
+  border-radius: 16px;
+  background: #fffdf8;
+  box-shadow: 0 14px 34px rgba(44, 26, 14, 0.08);
+}
+
+.admin-table-row {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr)) 180px;
+  gap: 12px;
+  align-items: center;
+  padding: 14px 16px;
+  border-bottom: 1px solid rgba(44, 26, 14, 0.08);
+}
+
+.admin-table-row:last-child {
+  border-bottom: 0;
+}
+
+.admin-table-head {
+  background: #f3eadb;
+  color: rgba(44, 26, 14, 0.68);
+  font-size: 0.8rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.admin-table-row span {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.admin-row-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  justify-content: flex-end;
+}
+
+.admin-row-actions button {
+  min-height: 30px;
+  padding: 6px 9px;
+  background: rgba(107, 143, 113, 0.14);
+  color: var(--admin-espresso);
+}
+
+.admin-calendar-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  padding: 14px;
+}
+
+.admin-calendar-grid .admin-table-row {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+  border: 1px solid rgba(44, 26, 14, 0.08);
+  border-radius: 12px;
+  background: #fffaf1;
+}
+
+.admin-list-skeleton {
+  height: 320px;
+  border-radius: 16px;
+  background: linear-gradient(90deg, #fffdf8, #efe4d1, #fffdf8);
+  background-size: 220% 100%;
+  animation: admin-pulse 1.2s ease infinite;
+}
+
+.admin-login-page {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: radial-gradient(circle at top, #fff8ea, #e8d9bd);
+}
+
+.admin-login-card {
+  display: grid;
+  gap: 14px;
+  width: min(100%, 420px);
+  padding: 34px;
+  border-radius: 16px;
+  background: #fffdf8;
+  box-shadow: 0 30px 80px rgba(44, 26, 14, 0.18);
+  text-align: center;
+}
+
+.admin-login-card img {
+  width: 110px;
+  margin: 0 auto;
+}
+
+.admin-login-card h1 {
+  color: var(--admin-espresso);
+  font-family: Georgia, 'Playfair Display', serif;
+}
+
+.admin-login-card p {
+  margin: 0 0 10px;
+  color: rgba(44, 26, 14, 0.68);
+  font-weight: 800;
+}
+
+.admin-error {
+  color: #c83131;
+  font-weight: 800;
+}
+
+.mobile-only {
+  display: none;
+}
+
+@keyframes admin-pulse {
+  to {
+    background-position: -220% 0;
+  }
+}
+
+@media (max-width: 1100px) {
+  .admin-stats-grid,
+  .admin-calendar-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .coffee-admin-topbar {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  .admin-profile div,
+  .admin-reset {
+    display: none;
+  }
+
+  .mobile-only {
+    display: grid;
+  }
+
+  .coffee-admin-sidebar {
+    transform: translateX(-100%);
+  }
+
+  .coffee-admin-sidebar.is-open {
+    transform: translateX(0);
+  }
+
+  .coffee-admin-shell {
+    padding-left: 0;
+  }
+}
+
+@media (max-width: 720px) {
+  .coffee-admin-topbar {
+    height: auto;
+    grid-template-columns: auto 1fr;
+    padding: 12px;
+  }
+
+  .coffee-admin-content {
+    padding: 20px 14px 34px;
+  }
+
+  .admin-stats-grid,
+  .admin-calendar-grid,
+  .admin-inline-form {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-crud-title,
+  .admin-toolbar {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .admin-table-head {
+    display: none;
+  }
+
+  .admin-table-row {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-row-actions {
+    justify-content: flex-start;
   }
 }

@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const path = require('path');
 const authRoutes = require('./routes/authRoutes');
+const adminRoutes = require('./routes/adminRoutes');
 const bookingRoutes = require('./routes/bookingRoutes');
 const blogRoutes = require('./routes/blogRoutes');
 const contactRoutes = require('./routes/contactRoutes');
@@ -15,6 +16,7 @@ const app = express();
 app.use(
   cors({
     origin: process.env.CLIENT_URL || 'http://localhost:3000',
+    credentials: true,
   })
 );
 app.use(express.json());
@@ -29,6 +31,7 @@ app.get('/api/health', (req, res) => {
 });
 
 app.use('/api/auth', authRoutes);
+app.use('/api/admin', adminRoutes);
 app.use('/api/bookings', bookingRoutes);
 app.use('/api/blog', blogRoutes);
 app.use('/api/contact', contactRoutes);

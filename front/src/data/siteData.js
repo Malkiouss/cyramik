@@ -53,6 +53,15 @@ export const socialCards = [
   'Soiree privee autour du tour de potier',
 ];
 
+export const instagramPosts = [
+  { image: coffee, alt: 'Latte art verse dans une tasse en ceramique' },
+  { image: studioTable, alt: 'Table d atelier preparee avec verres et feuillage' },
+  { image: boutique, alt: 'Selection de pieces artisanales Coffee Arts Paris' },
+  { image: ceramic, alt: 'Details de ceramiques emaillees' },
+  { image: event, alt: 'Moment creatif autour du cafe et de la ceramique' },
+  { image: coffee, alt: 'Cafe de specialite et instant doux au studio' },
+];
+
 export const products = [
   { _id: 'p1', name: 'Mug sauge emaille', price: 34, category: 'Ceramique', imageUrl: boutique, stock: 12 },
   { _id: 'p2', name: 'Coffret espresso & tasse', price: 42, category: 'Cafe', imageUrl: coffee, stock: 8 },

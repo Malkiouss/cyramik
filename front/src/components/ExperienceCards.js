@@ -7,6 +7,9 @@ const ExperienceCards = () => (
     <div className="section-heading">
       <span className="eyebrow">Experiences</span>
       <h2>Trois experiences, un meme lieu</h2>
+      <p>
+        Passez du cafe a la ceramique, puis a la boutique, dans un parcours doux et inspire.
+      </p>
     </div>
     <div className="experience-grid">
       {experiences.map((item, index) => (

@@ -5,6 +5,9 @@ const GalleryGrid = () => (
     <div className="section-heading">
       <span className="eyebrow">Studio</span>
       <h2>Au coeur de notre studio</h2>
+      <p>
+        Tables preparees, gestes creatifs et details artisanaux qui racontent l atmosphere du lieu.
+      </p>
     </div>
     <div className="gallery-grid">
       {galleryImages.map((image, index) => (
