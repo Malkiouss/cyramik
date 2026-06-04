@@ -110,3 +110,40 @@
     border-radius: 8px;
   }
 }
+
+@media (max-width: 1024px) {
+  .cafe-page,
+  .cafe-hero,
+  .cafe-menu,
+  .cafe-details {
+    max-width: 100%;
+  }
+
+  .cafe-menu img {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .cafe-page {
+    padding: 126px 16px 72px;
+  }
+
+  .cafe-hero {
+    margin-bottom: 40px;
+  }
+
+  .cafe-hero h1 {
+    font-size: clamp(2.35rem, 14vw, 4rem);
+    overflow-wrap: anywhere;
+  }
+
+  .cafe-menu,
+  .cafe-info-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .cafe-details {
+    margin-top: 64px;
+  }
+}

@@ -72,3 +72,37 @@
     padding-right: 18px;
   }
 }
+
+@media (max-width: 1024px) {
+  .blog-detail-page,
+  .blog-detail-content {
+    max-width: 100%;
+  }
+
+  .blog-detail-article img {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .blog-detail-page {
+    width: 100%;
+    padding-left: 16px;
+    padding-right: 16px;
+    padding-bottom: 72px;
+  }
+
+  .blog-detail-article {
+    gap: 18px;
+  }
+
+  .blog-detail-article h1,
+  .blog-detail-empty h1 {
+    font-size: clamp(2.2rem, 13vw, 3.7rem);
+    overflow-wrap: anywhere;
+  }
+
+  .blog-detail-article img {
+    max-height: none;
+  }
+}

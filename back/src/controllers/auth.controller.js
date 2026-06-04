@@ -18,6 +18,11 @@ const stateCookieOptions = {
   maxAge: 10 * 60 * 1000,
 };
 
+const redirectCookieOptions = {
+  ...stateCookieOptions,
+  httpOnly: true,
+};
+
 const loginRules = [
   body('email').isEmail().withMessage('Valid email is required'),
   body('password').notEmpty().withMessage('Password is required'),
@@ -30,6 +35,12 @@ const registerRules = [
 ];
 
 const getClientUrl = () => (process.env.CLIENT_URL || 'http://localhost:3000').split(',')[0].trim().replace(/\/+$/, '');
+
+const getSafeRedirectPath = (value) => {
+  if (!value || typeof value !== 'string') return '';
+  if (!value.startsWith('/') || value.startsWith('//') || value.includes('://')) return '';
+  return value;
+};
 
 const redirectWithGoogleError = (res, clientUrl, error, details) => {
   const params = new URLSearchParams({ error });
@@ -119,6 +130,10 @@ const googleStart = asyncHandler(async (req, res) => {
   });
 
   res.cookie('googleOAuthState', state, stateCookieOptions);
+  const redirectPath = getSafeRedirectPath(req.query.redirect);
+  if (redirectPath) {
+    res.cookie('googleOAuthRedirect', redirectPath, redirectCookieOptions);
+  }
   res.redirect(`https://accounts.google.com/o/oauth2/v2/auth?${params.toString()}`);
 });
 
@@ -133,6 +148,8 @@ const googleCallback = asyncHandler(async (req, res) => {
   }
 
   res.clearCookie('googleOAuthState', stateCookieOptions);
+  const redirectPath = getSafeRedirectPath(req.cookies?.googleOAuthRedirect);
+  res.clearCookie('googleOAuthRedirect', redirectCookieOptions);
 
   const tokenResponse = await fetch('https://oauth2.googleapis.com/token', {
     method: 'POST',
@@ -197,7 +214,7 @@ const googleCallback = asyncHandler(async (req, res) => {
 
   const token = generateToken(user);
   res.cookie('accessToken', token, cookieOptions);
-  return res.redirect(`${clientUrl}/client`);
+  return res.redirect(`${clientUrl}${redirectPath || '/client'}`);
 });
 
 const logout = asyncHandler(async (req, res) => {

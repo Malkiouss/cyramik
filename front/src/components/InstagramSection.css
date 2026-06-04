@@ -179,3 +179,42 @@
     padding: 12px;
   }
 }
+
+@media (max-width: 1024px) {
+  .instagram-section {
+    width: 100%;
+    padding-left: 32px;
+    padding-right: 32px;
+  }
+}
+
+@media (max-width: 768px) {
+  .instagram-section {
+    padding: 0 16px 64px;
+  }
+
+  .instagram-heading h2 {
+    font-size: clamp(2rem, 11vw, 3rem);
+    overflow-wrap: anywhere;
+  }
+
+  .instagram-handle,
+  .instagram-follow {
+    min-height: 44px;
+  }
+
+  .instagram-profile {
+    gap: 12px;
+  }
+
+  .instagram-profile h3 {
+    overflow-wrap: anywhere;
+  }
+
+  .instagram-card,
+  .instagram-widget,
+  .instagram-embed {
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+}

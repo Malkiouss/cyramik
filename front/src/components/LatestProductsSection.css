@@ -148,3 +148,36 @@
     margin: 0 6px;
   }
 }
+
+@media (max-width: 768px) {
+  .latest-products-section {
+    padding: 64px 16px 72px;
+  }
+
+  .latest-products-header {
+    margin-bottom: 32px;
+  }
+
+  .latest-products-header h2 {
+    font-size: clamp(2rem, 11vw, 3rem);
+    overflow-wrap: anywhere;
+  }
+
+  .latest-products-grid {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  .latest-product-image img {
+    max-width: 100%;
+  }
+
+  .latest-product-head {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .latest-product-more {
+    min-height: 48px;
+  }
+}

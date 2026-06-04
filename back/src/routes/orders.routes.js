@@ -1,11 +1,11 @@
 const express = require('express');
 const { validate } = require('../middleware/errorHandler');
-const { protect, optionalAuth, staffOrAdmin, adminOnly } = require('../middleware/auth');
+const { protect, staffOrAdmin, adminOnly } = require('../middleware/auth');
 const { orderRules, reservationRules, statusRules, listOrders, getOrder, createOrder, createReservation, updateStatus, deleteOrder } = require('../controllers/orders.controller');
 
 const router = express.Router();
 
-router.post('/reservations', optionalAuth, reservationRules, validate, createReservation);
+router.post('/reservations', protect, reservationRules, validate, createReservation);
 
 router.use(protect);
 router.get('/', staffOrAdmin, listOrders);

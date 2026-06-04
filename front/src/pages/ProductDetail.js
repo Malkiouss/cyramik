@@ -1,20 +1,34 @@
-import { useState } from 'react';
-import { Link, useLocation, useParams } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
 import api from '../api/axios';
 import { getProductImage, formatProductPrice } from '../components/ProductCard';
+import { useAuth } from '../hooks/useAuth';
 import { useProduct } from '../hooks/useProducts';
 import './ProductDetail.css';
 
 const ProductDetail = () => {
   const { id } = useParams();
-  const { pathname } = useLocation();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { pathname } = location;
   const { data: product, isLoading, isError } = useProduct(id);
+  const { user, getMe } = useAuth();
   const [reservation, setReservation] = useState({ customerName: '', customerEmail: '', customerPhone: '', quantity: 1, customerNote: '' });
   const [reservationStatus, setReservationStatus] = useState({ type: '', message: '' });
   const [submitting, setSubmitting] = useState(false);
   const isCeramique = pathname.startsWith('/ceramique');
   const backPath = isCeramique ? '/ceramique' : '/boutique';
   const backLabel = isCeramique ? 'Retour ceramique' : 'Retour boutique';
+
+  useEffect(() => {
+    if (!user) return;
+
+    setReservation((current) => ({
+      ...current,
+      customerName: user.name || current.customerName,
+      customerEmail: user.email || current.customerEmail,
+    }));
+  }, [user]);
 
   if (isLoading) {
     return (
@@ -44,6 +58,14 @@ const ProductDetail = () => {
 
   const reserveProduct = async (event) => {
     event.preventDefault();
+
+    if (getMe.isLoading) return;
+
+    if (!user) {
+      navigate(`/login?redirect=${encodeURIComponent(`${location.pathname}${location.search}`)}`);
+      return;
+    }
+
     setSubmitting(true);
     setReservationStatus({ type: '', message: '' });
     try {
@@ -52,9 +74,20 @@ const ProductDetail = () => {
         productId: product.id || product._id,
         quantity: Number(reservation.quantity || 1),
       });
-      setReservation({ customerName: '', customerEmail: '', customerPhone: '', quantity: 1, customerNote: '' });
+      setReservation({
+        customerName: user.name || '',
+        customerEmail: user.email || '',
+        customerPhone: '',
+        quantity: 1,
+        customerNote: '',
+      });
       setReservationStatus({ type: 'success', message: 'Reservation envoyee. Nous vous confirmerons la disponibilite rapidement.' });
     } catch (error) {
+      if (error.response?.status === 401) {
+        navigate(`/login?redirect=${encodeURIComponent(`${location.pathname}${location.search}`)}`);
+        return;
+      }
+
       setReservationStatus({ type: 'error', message: error.response?.data?.message || 'Reservation impossible pour le moment.' });
     } finally {
       setSubmitting(false);
@@ -88,20 +121,12 @@ const ProductDetail = () => {
           {stock > 0 ? (
             <form className="product-reservation-form" onSubmit={reserveProduct}>
               <h2>Reserver ce produit</h2>
+              {user ? (
+                <p className="product-reservation-account">Connecte en tant que <strong>{user.email}</strong></p>
+              ) : (
+                <p className="product-reservation-account">Connectez-vous pour reserver ce produit.</p>
+              )}
               <div className="product-reservation-grid">
-                <input
-                  value={reservation.customerName}
-                  onChange={(event) => setReservation({ ...reservation, customerName: event.target.value })}
-                  placeholder="Nom complet"
-                  required
-                />
-                <input
-                  type="email"
-                  value={reservation.customerEmail}
-                  onChange={(event) => setReservation({ ...reservation, customerEmail: event.target.value })}
-                  placeholder="Email"
-                  required
-                />
                 <input
                   value={reservation.customerPhone}
                   onChange={(event) => setReservation({ ...reservation, customerPhone: event.target.value })}
@@ -125,7 +150,9 @@ const ProductDetail = () => {
                 rows="3"
               />
               {reservationStatus.message && <p className={`product-reservation-message is-${reservationStatus.type}`}>{reservationStatus.message}</p>}
-              <button className="btn btn-primary" type="submit" disabled={submitting}>{submitting ? 'Envoi...' : 'Reserver'}</button>
+              <button className="btn btn-primary" type="submit" disabled={submitting || getMe.isLoading}>
+                {!user ? 'Se connecter pour reserver' : submitting ? 'Envoi...' : 'Reserver'}
+              </button>
             </form>
           ) : (
             <button className="btn btn-primary" type="button" disabled>Indisponible</button>

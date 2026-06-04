@@ -103,6 +103,21 @@
   font-size: 1.2rem;
 }
 
+.product-reservation-account {
+  width: fit-content;
+  margin: 0;
+  border-radius: 999px;
+  padding: 9px 12px;
+  background: rgba(156, 167, 125, 0.16);
+  color: var(--olive);
+  font-size: 0.86rem;
+  font-weight: 800;
+}
+
+.product-reservation-account strong {
+  color: var(--brown);
+}
+
 .product-reservation-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -173,6 +188,59 @@
   .product-detail-page {
     padding-left: 18px;
     padding-right: 18px;
+  }
+
+  .product-reservation-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 1024px) {
+  .product-detail-page,
+  .product-detail-empty {
+    max-width: 100%;
+  }
+
+  .product-detail-shell {
+    grid-template-columns: 1fr;
+  }
+
+  .product-detail-main-image,
+  .product-detail-thumbs img {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .product-detail-page {
+    width: 100%;
+    padding-left: 16px;
+    padding-right: 16px;
+    padding-bottom: 72px;
+  }
+
+  .product-detail-shell {
+    gap: 26px;
+  }
+
+  .product-detail-thumbs {
+    gap: 10px;
+  }
+
+  .product-detail-copy {
+    gap: 14px;
+    padding-top: 0;
+  }
+
+  .product-detail-copy h1,
+  .product-detail-empty h1 {
+    font-size: clamp(2.2rem, 13vw, 3.7rem);
+    overflow-wrap: anywhere;
+  }
+
+  .product-detail-copy .btn,
+  .product-reservation-account {
+    width: 100%;
   }
 
   .product-reservation-grid {

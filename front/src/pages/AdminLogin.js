@@ -16,6 +16,11 @@ const googleErrors = {
   google_denied: 'Ce compte Google n est pas autorise.',
 };
 
+const getSafeRedirectPath = (value) => {
+  if (!value || !value.startsWith('/') || value.startsWith('//') || value.includes('://')) return '';
+  return value;
+};
+
 const AdminLogin = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
@@ -23,6 +28,7 @@ const AdminLogin = () => {
   const [mode, setMode] = useState('login');
   const googleError = googleErrors[searchParams.get('error')] || '';
   const googleErrorDetails = searchParams.get('details');
+  const redirectPath = getSafeRedirectPath(searchParams.get('redirect'));
   const [form, setForm] = useState({
     name: 'Admin Coffee Arts Paris',
     email: 'admin@coffeeartsparis.com',
@@ -38,12 +44,13 @@ const AdminLogin = () => {
     event.preventDefault();
     setError('');
     try {
+      let user;
       if (isSignup) {
-        await register.mutateAsync(form);
+        user = await register.mutateAsync(form);
       } else {
-        await login.mutateAsync({ email: form.email, password: form.password });
+        user = await login.mutateAsync({ email: form.email, password: form.password });
       }
-      navigate('/admin');
+      navigate(redirectPath || (user?.role === 'admin' ? '/admin' : '/client'));
     } catch (err) {
       setError(err.response?.data?.message || 'Connexion impossible');
     }
@@ -56,7 +63,10 @@ const AdminLogin = () => {
 
   const continueWithGoogle = () => {
     setError('');
-    window.location.href = `${getApiUrl()}/auth/google`;
+    const params = new URLSearchParams();
+    if (redirectPath) params.set('redirect', redirectPath);
+    const query = params.toString();
+    window.location.href = `${getApiUrl()}/auth/google${query ? `?${query}` : ''}`;
   };
 
   return (

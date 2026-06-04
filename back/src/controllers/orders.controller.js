@@ -12,8 +12,8 @@ const orderRules = [
 
 const reservationRules = [
   body('productId').isMongoId().withMessage('Product is required'),
-  body('customerName').trim().notEmpty().withMessage('Name is required'),
-  body('customerEmail').isEmail().withMessage('Valid email is required'),
+  body('customerName').optional().trim().notEmpty().withMessage('Name is required'),
+  body('customerEmail').optional().isEmail().withMessage('Valid email is required'),
   body('customerPhone').trim().notEmpty().withMessage('Phone is required'),
   body('quantity').optional().isInt({ min: 1 }).withMessage('Quantity must be at least 1'),
 ];
@@ -114,9 +114,9 @@ const createReservation = asyncHandler(async (req, res) => {
   }
 
   const order = await Order.create({
-    user: req.user?._id,
-    customerName: req.body.customerName,
-    customerEmail: req.body.customerEmail,
+    user: req.user._id,
+    customerName: req.user.name,
+    customerEmail: req.user.email,
     customerPhone: req.body.customerPhone,
     customerNote: req.body.customerNote || '',
     source: 'product-reservation',

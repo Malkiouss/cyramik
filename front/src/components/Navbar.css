@@ -136,3 +136,47 @@
     min-height: 54px;
   }
 }
+
+@media (max-width: 1024px) {
+  .nav-shell {
+    width: 100%;
+    padding: 0 18px;
+  }
+
+  .mobile-menu {
+    width: calc(100% - 36px);
+  }
+}
+
+@media (max-width: 768px) {
+  .navbar {
+    padding-top: 12px;
+  }
+
+  .nav-shell {
+    gap: 10px;
+    padding: 0 12px;
+  }
+
+  .brand img {
+    max-width: 86px;
+  }
+
+  .icon-link,
+  .menu-toggle {
+    width: 44px;
+    height: 44px;
+  }
+
+  .mobile-menu {
+    width: calc(100% - 24px);
+    max-width: none;
+    padding: 18px;
+  }
+
+  .mobile-menu a {
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+  }
+}
