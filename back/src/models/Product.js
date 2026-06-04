@@ -15,7 +15,7 @@ const productSchema = new mongoose.Schema(
     category: {
       type: String,
       trim: true,
-      default: 'ceramic',
+      default: 'ceramique',
     },
     price: {
       type: Number,
@@ -31,6 +31,10 @@ const productSchema = new mongoose.Schema(
       type: Number,
       default: 0,
       min: 0,
+    },
+    featured: {
+      type: Boolean,
+      default: false,
     },
   },
   {
