@@ -52,6 +52,32 @@ const resourceConfig = {
 };
 
 const todayForInput = () => new Date().toISOString().slice(0, 10);
+const toDateKey = (date) => {
+  if (!date) return '';
+  const value = new Date(date);
+  if (Number.isNaN(value.getTime())) return '';
+  return value.toISOString().slice(0, 10);
+};
+
+const calendarDateTime = (date, duration = 120) => {
+  const start = new Date(date);
+  if (Number.isNaN(start.getTime())) return '';
+  const end = new Date(start.getTime() + Number(duration || 120) * 60 * 1000);
+  const format = (value) => value.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}Z$/, 'Z');
+  return `${format(start)}/${format(end)}`;
+};
+
+const googleCalendarUrl = (item) => {
+  const params = new URLSearchParams({
+    action: 'TEMPLATE',
+    text: item.title || 'Atelier Coffee Arts Paris',
+    dates: calendarDateTime(item.date, item.duration),
+    details: item.description || 'Atelier reserve depuis le calendrier Coffee Arts Paris.',
+    location: item.location || 'Coffee Arts Paris',
+  });
+  return `https://calendar.google.com/calendar/render?${params.toString()}`;
+};
+
 const defaultDraft = (config) => {
   if (config.resource === 'products') return { name: '', description: '', category: config.category || 'goodies', price: '', stock: '' };
   if (config.resource === 'workshops') return { title: '', date: todayForInput(), duration: 120, maxParticipants: 10, price: '', location: 'Coffee Arts Paris' };
@@ -158,6 +184,101 @@ const formatCell = (field, value) => {
   if (field.toLowerCase().includes('date') || field === 'expiresAt' || field === 'publishedAt') return value ? new Date(value).toLocaleDateString('fr-FR') : '-';
   if (field === 'price' || field === 'total' || field === 'value') return money(value);
   return value ?? '-';
+};
+
+const CalendarBoard = ({ items, onEdit, onDelete }) => {
+  const [cursor, setCursor] = useState(() => new Date());
+  const monthStart = new Date(cursor.getFullYear(), cursor.getMonth(), 1);
+  const startOffset = (monthStart.getDay() + 6) % 7;
+  const firstCell = new Date(monthStart);
+  firstCell.setDate(monthStart.getDate() - startOffset);
+
+  const calendarDays = Array.from({ length: 42 }, (_, index) => {
+    const date = new Date(firstCell);
+    date.setDate(firstCell.getDate() + index);
+    return date;
+  });
+
+  const eventsByDay = useMemo(() => {
+    return items.reduce((acc, item) => {
+      const key = toDateKey(item.date);
+      if (!key) return acc;
+      acc[key] = [...(acc[key] || []), item];
+      return acc;
+    }, {});
+  }, [items]);
+
+  const monthEvents = items
+    .filter((item) => {
+      const date = new Date(item.date);
+      return date.getMonth() === cursor.getMonth() && date.getFullYear() === cursor.getFullYear();
+    })
+    .sort((left, right) => new Date(left.date) - new Date(right.date));
+
+  const moveMonth = (amount) => {
+    setCursor((current) => new Date(current.getFullYear(), current.getMonth() + amount, 1));
+  };
+
+  return (
+    <div className="admin-calendar-shell">
+      <div className="admin-calendar-hero">
+        <div>
+          <span>Planning ateliers</span>
+          <h2>{cursor.toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' })}</h2>
+          <p>{monthEvents.length} atelier(s) prevu(s) ce mois-ci</p>
+        </div>
+        <div className="admin-calendar-controls">
+          <button type="button" onClick={() => moveMonth(-1)}>Precedent</button>
+          <button type="button" onClick={() => setCursor(new Date())}>Aujourd'hui</button>
+          <button type="button" onClick={() => moveMonth(1)}>Suivant</button>
+        </div>
+      </div>
+
+      <div className="admin-calendar-layout">
+        <div className="admin-calendar-month" aria-label="Calendrier mensuel">
+          {['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'].map((day) => <strong key={day}>{day}</strong>)}
+          {calendarDays.map((date) => {
+            const key = toDateKey(date);
+            const dayEvents = eventsByDay[key] || [];
+            const isOutside = date.getMonth() !== cursor.getMonth();
+            const isToday = key === todayForInput();
+
+            return (
+              <div className={`admin-calendar-day ${isOutside ? 'is-outside' : ''} ${isToday ? 'is-today' : ''}`} key={key}>
+                <span>{date.getDate()}</span>
+                <div>
+                  {dayEvents.slice(0, 3).map((item) => (
+                    <button type="button" key={item.id} onClick={() => onEdit(item)}>
+                      {item.title}
+                    </button>
+                  ))}
+                  {dayEvents.length > 3 && <small>+{dayEvents.length - 3} autre(s)</small>}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        <aside className="admin-calendar-agenda">
+          <h3>A venir</h3>
+          {monthEvents.length === 0 ? <p>Aucun atelier planifie pour ce mois.</p> : monthEvents.slice(0, 8).map((item) => (
+            <article key={item.id}>
+              <time>{new Date(item.date).toLocaleDateString('fr-FR', { day: '2-digit', month: 'short' })}</time>
+              <div>
+                <h4>{item.title}</h4>
+                <span>{item.enrolled || 0}/{item.maxParticipants || 0} participants · {item.location || 'Coffee Arts Paris'}</span>
+                <div className="admin-calendar-actions">
+                  <a href={googleCalendarUrl(item)} target="_blank" rel="noreferrer">Google Calendar</a>
+                  <button type="button" onClick={() => onEdit(item)}>Modifier</button>
+                  <button className="danger" type="button" onClick={() => onDelete(item.id)}>Supprimer</button>
+                </div>
+              </div>
+            </article>
+          ))}
+        </aside>
+      </div>
+    </div>
+  );
 };
 
 export const AdminResourcePage = ({ type }) => {
@@ -301,7 +422,14 @@ export const AdminResourcePage = ({ type }) => {
       {error && <span className="admin-error">{error}</span>}
 
       {loading ? <div className="admin-list-skeleton" /> : (
-        <div className={config.cardView ? 'admin-card-grid' : config.calendar ? 'admin-calendar-grid' : 'admin-data-table'}>
+        config.calendar ? (
+          <CalendarBoard
+            items={filtered}
+            onEdit={(item) => setDraft({ ...item, date: item.date ? item.date.slice(0, 10) : todayForInput() })}
+            onDelete={remove}
+          />
+        ) : (
+        <div className={config.cardView ? 'admin-card-grid' : 'admin-data-table'}>
           {config.cardView && filtered.map((item) => (
             <article className="admin-product-card" key={item.id}>
               <div className="admin-product-image">
@@ -346,6 +474,7 @@ export const AdminResourcePage = ({ type }) => {
           </>
           )}
         </div>
+        )
       )}
     </section>
   );
