@@ -40,7 +40,7 @@ const Navbar = () => {
             <NavLink key={item.path} to={item.path}>{item.label}</NavLink>
           ))}
           <Link className="icon-link" to="/boutique" aria-label="Panier"><FiShoppingBag /></Link>
-          <Link className="icon-link" to="/login" aria-label="Compte"><FiUser /></Link>
+          <Link className="icon-link" to="/client" aria-label="Compte"><FiUser /></Link>
         </div>
 
         <button className="menu-toggle" onClick={() => setOpen((value) => !value)} aria-label="Menu">
@@ -53,7 +53,7 @@ const Navbar = () => {
           {links.map((item) => (
             <NavLink key={item.path} to={item.path} onClick={() => setOpen(false)}>{item.label}</NavLink>
           ))}
-          <NavLink to="/admin" onClick={() => setOpen(false)}>Admin dashboard</NavLink>
+          <NavLink to="/client" onClick={() => setOpen(false)}>Mon compte</NavLink>
         </div>
       )}
     </header>

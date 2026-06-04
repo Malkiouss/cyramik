@@ -21,12 +21,16 @@ const AdminLogin = () => {
   const [searchParams] = useSearchParams();
   const { login, register } = useAuth();
   const [mode, setMode] = useState('login');
+  const googleError = googleErrors[searchParams.get('error')] || '';
+  const googleErrorDetails = searchParams.get('details');
   const [form, setForm] = useState({
     name: 'Admin Coffee Arts Paris',
     email: 'admin@coffeeartsparis.com',
     password: 'Admin1234!',
   });
-  const [error, setError] = useState(googleErrors[searchParams.get('error')] || '');
+  const [error, setError] = useState(
+    googleErrorDetails ? `${googleError} Detail: ${googleErrorDetails}` : googleError
+  );
   const [showPassword, setShowPassword] = useState(false);
   const isSignup = mode === 'signup';
 

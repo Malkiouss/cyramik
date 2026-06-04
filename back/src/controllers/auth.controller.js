@@ -31,6 +31,16 @@ const registerRules = [
 
 const getClientUrl = () => (process.env.CLIENT_URL || 'http://localhost:3000').split(',')[0].trim().replace(/\/+$/, '');
 
+const redirectWithGoogleError = (res, clientUrl, error, details) => {
+  const params = new URLSearchParams({ error });
+
+  if (process.env.NODE_ENV !== 'production' && details) {
+    params.set('details', details);
+  }
+
+  return res.redirect(`${clientUrl}/login?${params.toString()}`);
+};
+
 const requireGoogleConfig = () => {
   const required = ['GOOGLE_CLIENT_ID', 'GOOGLE_CLIENT_SECRET', 'GOOGLE_REDIRECT_URI'];
   const missing = required.filter((key) => !process.env[key]);
@@ -119,7 +129,7 @@ const googleCallback = asyncHandler(async (req, res) => {
   const { code, state } = req.query;
 
   if (!code || !state || state !== req.cookies?.googleOAuthState) {
-    return res.redirect(`${clientUrl}/login?error=google_state`);
+    return redirectWithGoogleError(res, clientUrl, 'google_state');
   }
 
   res.clearCookie('googleOAuthState', stateCookieOptions);
@@ -139,7 +149,16 @@ const googleCallback = asyncHandler(async (req, res) => {
   if (!tokenResponse.ok) {
     const errorText = await tokenResponse.text();
     console.error('Google OAuth token exchange failed:', tokenResponse.status, errorText);
-    return res.redirect(`${clientUrl}/login?error=google_token`);
+    let details = errorText;
+
+    try {
+      const parsed = JSON.parse(errorText);
+      details = parsed.error_description || parsed.error || errorText;
+    } catch (error) {
+      details = errorText;
+    }
+
+    return redirectWithGoogleError(res, clientUrl, 'google_token', details);
   }
 
   const tokens = await tokenResponse.json();
@@ -150,15 +169,16 @@ const googleCallback = asyncHandler(async (req, res) => {
   if (!profileResponse.ok) {
     const errorText = await profileResponse.text();
     console.error('Google OAuth profile fetch failed:', profileResponse.status, errorText);
-    return res.redirect(`${clientUrl}/login?error=google_profile`);
+    return redirectWithGoogleError(res, clientUrl, 'google_profile');
   }
 
   const profile = await profileResponse.json();
   const email = String(profile.email || '').toLowerCase();
   const adminEmail = String(process.env.ADMIN_EMAIL || '').toLowerCase();
+  const role = adminEmail && email === adminEmail ? 'admin' : 'client';
 
-  if (!profile.email_verified || !email || email !== adminEmail) {
-    return res.redirect(`${clientUrl}/login?error=google_denied`);
+  if (!profile.email_verified || !email) {
+    return redirectWithGoogleError(res, clientUrl, 'google_denied');
   }
 
   const user = await User.findOneAndUpdate(
@@ -167,7 +187,7 @@ const googleCallback = asyncHandler(async (req, res) => {
       $set: {
         name: profile.name || email.split('@')[0],
         googleId: profile.sub,
-        role: 'admin',
+        role,
         isActive: true,
         avatar: profile.picture,
       },
@@ -177,7 +197,7 @@ const googleCallback = asyncHandler(async (req, res) => {
 
   const token = generateToken(user);
   res.cookie('accessToken', token, cookieOptions);
-  return res.redirect(`${clientUrl}/admin`);
+  return res.redirect(`${clientUrl}/client`);
 });
 
 const logout = asyncHandler(async (req, res) => {
