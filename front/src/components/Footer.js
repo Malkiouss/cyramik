@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { FaCcAmex, FaCcMastercard, FaCcVisa } from 'react-icons/fa';
+import './Footer.css';
 
 const Footer = () => (
   <footer className="footer">

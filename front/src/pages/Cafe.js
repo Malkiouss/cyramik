@@ -1,5 +1,6 @@
 import ProductCard from '../components/ProductCard';
 import { products } from '../data/siteData';
+import './Cafe.css';
 
 const Cafe = () => (
   <main className="page page-offset">

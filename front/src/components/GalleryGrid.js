@@ -1,4 +1,5 @@
 import { galleryImages } from '../data/siteData';
+import './GalleryGrid.css';
 
 const GalleryGrid = () => (
   <section className="section gallery-section">

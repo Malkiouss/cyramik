@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import './WorkshopCard.css';
 
 const WorkshopCard = ({ workshop }) => (
   <article className="item-card workshop-card">

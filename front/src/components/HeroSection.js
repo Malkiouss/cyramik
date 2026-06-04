@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import SocialFloatingButtons from './SocialFloatingButtons';
+import './HeroSection.css';
 
 const HeroSection = () => (
   <section className="hero">

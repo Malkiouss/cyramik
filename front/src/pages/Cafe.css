@@ -1,0 +1,13 @@
+.menu-list {
+  display: grid;
+  gap: 12px;
+  max-width: 780px;
+  margin-bottom: 44px;
+}
+
+.menu-list div {
+  display: flex;
+  justify-content: space-between;
+  padding: 20px 0;
+  border-bottom: 1px solid rgba(79, 55, 41, 0.18);
+}

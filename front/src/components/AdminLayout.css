@@ -1,0 +1,175 @@
+.coffee-admin {
+  --admin-cream: #fbf7ef;
+  --admin-panel: #fffdf8;
+  --admin-espresso: #2c1a0e;
+  --admin-sage: #5d684f;
+  --admin-gold: #c9a84c;
+  --admin-terracotta: #b86f52;
+  --admin-sky: #55a6c8;
+  min-height: 100vh;
+  background: #fbfaf7;
+  color: var(--admin-espresso);
+  font-family: 'Manrope', 'DM Sans', system-ui, sans-serif;
+}
+
+.coffee-admin-shell {
+  min-height: 100vh;
+  padding-left: 250px;
+}
+
+.coffee-admin-topbar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: grid;
+  grid-template-columns: minmax(260px, 540px) 1fr;
+  align-items: center;
+  gap: 18px;
+  height: 58px;
+  padding: 0 24px 0 30px;
+  border-bottom: 1px solid rgba(44, 26, 14, 0.1);
+  background: rgba(255, 255, 255, 0.94);
+  backdrop-filter: blur(18px);
+}
+
+.admin-search {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 38px;
+  max-width: 450px;
+  border: 1px solid rgba(44, 26, 14, 0.14);
+  border-radius: 999px;
+  padding: 0 14px;
+  background: #fff;
+}
+
+.admin-search input {
+  border: 0;
+  border-radius: 0;
+  padding: 0;
+  background: transparent;
+  outline: 0;
+}
+
+.admin-top-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 14px;
+}
+
+.admin-icon-button,
+.admin-logout,
+.admin-reset {
+  border: 0;
+  cursor: pointer;
+}
+
+.admin-icon-button {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--admin-espresso);
+}
+
+.admin-icon-button span {
+  position: absolute;
+  top: 6px;
+  right: 7px;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--admin-gold);
+}
+
+.admin-profile {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.admin-profile > span {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: #5d684f;
+  color: #fff;
+  font-weight: 900;
+}
+
+.admin-profile div {
+  display: grid;
+  line-height: 1.15;
+}
+
+.admin-profile small {
+  color: rgba(44, 26, 14, 0.62);
+}
+
+.admin-reset {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border-radius: 8px;
+  padding: 10px 14px;
+  background: #5d684f;
+  color: #fff;
+  font-weight: 900;
+}
+
+.admin-logout {
+  display: grid;
+  place-items: center;
+  background: transparent;
+  color: var(--admin-espresso);
+}
+
+.coffee-admin-content {
+  padding: 28px 30px 42px;
+}
+
+.mobile-only {
+  display: none;
+}
+
+@media (max-width: 1100px) {
+  .coffee-admin-topbar {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  .admin-profile div,
+  .admin-reset {
+    display: none;
+  }
+
+  .mobile-only {
+    display: grid;
+  }
+
+  .coffee-admin-shell {
+    padding-left: 0;
+  }
+}
+
+@media (max-width: 720px) {
+  .coffee-admin-topbar {
+    height: auto;
+    grid-template-columns: auto 1fr;
+    padding: 12px;
+  }
+
+  .coffee-admin-content {
+    padding: 20px 14px 34px;
+  }
+
+  .admin-search {
+    max-width: none;
+  }
+}

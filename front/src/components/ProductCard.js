@@ -1,5 +1,7 @@
+import './ProductCard.css';
+
 const ProductCard = ({ product }) => (
-  <article className="item-card">
+  <article className="item-card product-card">
     <img src={product.imageUrl} alt={product.name} />
     <div>
       <span>{product.category}</span>

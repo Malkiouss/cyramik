@@ -1,6 +1,7 @@
 import { FaInstagram } from 'react-icons/fa';
 import ceramic from '../assets/images/ceramic.svg';
 import { instagramPosts } from '../data/siteData';
+import './InstagramSection.css';
 
 const InstagramSection = () => (
   <section className="instagram-section" aria-labelledby="instagram-title">

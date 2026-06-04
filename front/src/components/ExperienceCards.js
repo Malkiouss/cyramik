@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { experiences } from '../data/siteData';
+import './ExperienceCards.css';
 
 const ExperienceCards = () => (
   <section className="section">

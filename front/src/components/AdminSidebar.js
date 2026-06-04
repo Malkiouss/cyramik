@@ -12,6 +12,7 @@ import {
   FiTruck,
   FiUsers,
 } from 'react-icons/fi';
+import './AdminSidebar.css';
 
 const links = [
   { to: '/admin', label: 'Dashboard', icon: <FiGrid />, end: true },

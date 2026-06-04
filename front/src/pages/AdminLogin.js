@@ -1,9 +1,11 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import api from '../services/api';
+import { useAuth } from '../hooks/useAuth';
+import './AdminLogin.css';
 
 const AdminLogin = () => {
   const navigate = useNavigate();
+  const { login } = useAuth();
   const [form, setForm] = useState({ email: 'admin@coffeeartsparis.com', password: 'Admin1234!' });
   const [error, setError] = useState('');
 
@@ -11,8 +13,7 @@ const AdminLogin = () => {
     event.preventDefault();
     setError('');
     try {
-      const { data } = await api.post('/admin/auth/login', form, { withCredentials: true });
-      localStorage.setItem('coffeeArtsAdmin', JSON.stringify(data));
+      await login.mutateAsync(form);
       navigate('/admin');
     } catch (err) {
       setError(err.response?.data?.message || 'Connexion impossible');

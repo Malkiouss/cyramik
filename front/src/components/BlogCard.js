@@ -1,7 +1,8 @@
 import { Link } from 'react-router-dom';
+import './BlogCard.css';
 
 const BlogCard = ({ post }) => (
-  <article className="item-card">
+  <article className="item-card blog-card">
     <img src={post.imageUrl} alt={post.title} />
     <div>
       <span>Journal du studio</span>

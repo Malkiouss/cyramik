@@ -1,0 +1,31 @@
+.social-floating {
+  position: fixed;
+  top: 42%;
+  right: 24px;
+  z-index: 22;
+  display: grid;
+  gap: 12px;
+  color: var(--cream);
+}
+
+.social-floating a {
+  display: inline-grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border: 1px solid rgba(255, 255, 255, 0.36);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.14);
+  backdrop-filter: blur(12px);
+}
+
+@media (max-width: 680px) {
+  .social-floating {
+    right: 12px;
+  }
+
+  .social-floating a {
+    width: 34px;
+    height: 34px;
+  }
+}

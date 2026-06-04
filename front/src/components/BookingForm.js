@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import api from '../services/api';
+import './BookingForm.css';
 
 const BookingForm = ({ workshops = [] }) => {
   const [form, setForm] = useState({ name: '', email: '', phone: '', seats: 1, bookingDate: '', workshop: workshops[0]?._id || '' });

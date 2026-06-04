@@ -1,0 +1,5 @@
+.product-card strong {
+  display: inline-block;
+  margin-top: 8px;
+  color: var(--brown);
+}

@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import studioTable from '../assets/images/studio-table.svg';
+import './CTASection.css';
 
 const CTASection = () => (
   <section className="cta-section">

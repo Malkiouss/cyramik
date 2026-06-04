@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
 import { FiBell, FiLogOut, FiMenu, FiRefreshCcw, FiSearch } from 'react-icons/fi';
 import AdminSidebar from './AdminSidebar';
+import './AdminLayout.css';
 
 const AdminLayout = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);

@@ -1,0 +1,31 @@
+.gallery-grid {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr 1fr;
+  grid-auto-rows: 220px;
+  gap: 18px;
+}
+
+.gallery-grid img {
+  width: 100%;
+  height: 100%;
+  border-radius: 28px;
+  object-fit: cover;
+  box-shadow: var(--shadow);
+}
+
+.gallery-grid img:nth-child(1),
+.gallery-grid img:nth-child(5) {
+  grid-row: span 2;
+}
+
+@media (max-width: 680px) {
+  .gallery-grid {
+    grid-template-columns: 1fr;
+    grid-auto-rows: 220px;
+  }
+
+  .gallery-grid img:nth-child(1),
+  .gallery-grid img:nth-child(5) {
+    grid-row: span 1;
+  }
+}

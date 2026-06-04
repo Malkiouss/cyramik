@@ -1,0 +1,39 @@
+.footer {
+  display: grid;
+  grid-template-columns: 1.5fr repeat(3, 1fr);
+  gap: 34px;
+  padding: 70px 48px;
+  background: #58604c;
+  color: var(--cream);
+}
+
+.footer a,
+.footer p {
+  display: block;
+  margin: 8px 0;
+  color: rgba(248, 239, 223, 0.75);
+}
+
+.brand--footer {
+  display: inline-flex;
+  width: auto;
+  min-height: 0;
+  align-items: flex-start;
+  color: var(--cream);
+  font-family: 'DuperWeb W03 Bold', 'Manrope', system-ui, sans-serif;
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+.payments {
+  display: flex;
+  gap: 10px;
+  margin: 12px 0;
+  font-size: 1.7rem;
+}
+
+@media (max-width: 680px) {
+  .footer {
+    padding: 48px 24px;
+  }
+}

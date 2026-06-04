@@ -16,6 +16,8 @@ import {
   FiUsers,
 } from 'react-icons/fi';
 import api from '../services/api';
+import { useDashboard } from '../hooks/useDashboard';
+import './AdminDashboard.css';
 
 const money = (value) => `${Number(value || 0).toLocaleString('fr-FR', { minimumFractionDigits: 2 })}€`;
 
@@ -35,20 +37,78 @@ const statMeta = [
 ];
 
 const resourceConfig = {
-  commandes: { resource: 'orders', title: 'Commandes', fields: ['customer', 'email', 'total', 'status'], filter: 'status' },
-  'paiements-square': { resource: 'orders', title: 'Paiements Square', fields: ['customer', 'total', 'paymentMethod', 'status'] },
-  ceramique: { resource: 'products', title: 'Ceramique', fields: ['name', 'price', 'stock', 'isActive'], category: 'ceramique' },
-  goodies: { resource: 'products', title: 'Goodies / Lifestyle', fields: ['name', 'category', 'price', 'stock'], category: 'goodies' },
-  ateliers: { resource: 'workshops', title: 'Ateliers Standards', fields: ['title', 'date', 'enrolled', 'maxParticipants'], type: 'standard' },
-  iftar: { resource: 'workshops', title: 'Atelier Iftar Ramadan', fields: ['title', 'date', 'enrolled', 'maxParticipants'], type: 'iftar' },
-  calendrier: { resource: 'workshops', title: 'Calendrier', fields: ['title', 'date', 'enrolled', 'maxParticipants'], calendar: true },
+  commandes: { resource: 'orders', title: 'Commandes', fields: ['customer', 'email', 'total', 'status'], filter: 'status', creatable: false },
+  'paiements-square': { resource: 'orders', title: 'Paiements Square', fields: ['customer', 'total', 'paymentMethod', 'status'], creatable: false },
+  ceramique: { resource: 'products', title: 'Ceramique', fields: ['name', 'price', 'stock', 'isActive'], formFields: ['name', 'description', 'price', 'stock'], category: 'ceramique', photoUpload: true, cardView: true, actionLabel: 'Nouveau produit' },
+  goodies: { resource: 'products', title: 'Goodies / Lifestyle', fields: ['name', 'category', 'price', 'stock'], formFields: ['name', 'description', 'category', 'price', 'stock'], category: 'goodies', photoUpload: true, cardView: true, actionLabel: 'Nouveau produit' },
+  ateliers: { resource: 'workshops', title: 'Ateliers Standards', fields: ['title', 'date', 'enrolled', 'maxParticipants'], formFields: ['title', 'description', 'date', 'duration', 'maxParticipants', 'price', 'location'], type: 'standard', photoUpload: true, cardView: true, actionLabel: 'Nouvel atelier' },
+  iftar: { resource: 'workshops', title: 'Atelier Iftar Ramadan', fields: ['title', 'date', 'enrolled', 'maxParticipants'], formFields: ['title', 'description', 'date', 'duration', 'maxParticipants', 'price', 'location'], type: 'iftar', photoUpload: true, cardView: true, actionLabel: 'Nouvel atelier' },
+  calendrier: { resource: 'workshops', title: 'Calendrier', fields: ['title', 'date', 'enrolled', 'maxParticipants'], formFields: ['title', 'description', 'date', 'duration', 'maxParticipants', 'price', 'location'], calendar: true },
   utilisateurs: { resource: 'users', title: 'Utilisateurs', fields: ['name', 'email', 'role', 'isActive'] },
-  messages: { resource: 'messages', title: 'Messages', fields: ['fromName', 'fromEmail', 'subject', 'isRead'] },
-  blogs: { resource: 'blogs', title: 'Blogs', fields: ['title', 'slug', 'published', 'publishedAt'] },
-  'cartes-cadeaux': { resource: 'gift-cards', title: 'Cartes cadeaux', fields: ['code', 'value', 'isActive', 'expiresAt'] },
-  'frais-de-livraison': { resource: 'shipping', title: 'Frais de livraison', fields: ['zone', 'price', 'minOrder'] },
+  messages: { resource: 'messages', title: 'Messages', fields: ['fromName', 'fromEmail', 'subject', 'isRead'], creatable: false },
+  blogs: { resource: 'blogs', title: 'Blogs', fields: ['title', 'slug', 'published', 'publishedAt'], formFields: ['title', 'excerpt', 'content'], photoUpload: true, cardView: true, actionLabel: 'Nouvel article' },
+  'cartes-cadeaux': { resource: 'gift-cards', title: 'Cartes cadeaux', fields: ['code', 'value', 'isActive', 'expiresAt'], formFields: ['value', 'expiresAt'] },
+  'frais-de-livraison': { resource: 'shipping', title: 'Frais de livraison', fields: ['name', 'price', 'minOrderAmount'] },
 };
 
+const todayForInput = () => new Date().toISOString().slice(0, 10);
+const defaultDraft = (config) => {
+  if (config.resource === 'products') return { name: '', description: '', category: config.category || 'goodies', price: '', stock: '' };
+  if (config.resource === 'workshops') return { title: '', date: todayForInput(), duration: 120, maxParticipants: 10, price: '', location: 'Coffee Arts Paris' };
+  if (config.resource === 'users') return { name: '', email: '', password: 'Admin1234!', role: 'client' };
+  if (config.resource === 'blogs') return { title: '', excerpt: '', content: '' };
+  if (config.resource === 'gift-cards') return { value: '', expiresAt: '' };
+  if (config.resource === 'shipping') return { name: '', price: '', minOrderAmount: 0, estimatedDays: '2-4 jours' };
+  return {};
+};
+
+const buildPayload = (draft, config) => {
+  const { files, id, _id, createdAt, updatedAt, ...payload } = { ...draft };
+  if (config.resource === 'products') {
+    payload.category = config.category === 'ceramique' ? 'ceramique' : payload.category || config.category || 'goodies';
+    payload.price = Number(payload.price);
+    payload.stock = Number(payload.stock || 0);
+  }
+  if (config.resource === 'workshops') {
+    payload.type = config.type || payload.type || 'standard';
+    payload.duration = Number(payload.duration || 120);
+    payload.maxParticipants = Number(payload.maxParticipants || 10);
+    payload.price = Number(payload.price);
+    payload.enrolled = Number(payload.enrolled || 0);
+  }
+  if (config.resource === 'gift-cards') payload.value = Number(payload.value);
+  if (config.resource === 'shipping') {
+    payload.price = Number(payload.price);
+    payload.minOrderAmount = Number(payload.minOrderAmount || 0);
+  }
+  return payload;
+};
+
+const buildRequestBody = (payload, draft, config) => {
+  if (!config.photoUpload) return payload;
+  const formData = new FormData();
+  Object.entries(payload).forEach(([key, value]) => {
+    if (value !== undefined && value !== null) formData.append(key, value);
+  });
+  Array.from(draft.files || []).forEach((file) => formData.append('images', file));
+  return formData;
+};
+
+const requestConfig = () => undefined;
+
+const getImage = (item, config) => {
+  if (config.resource === 'blogs') return item.coverImage;
+  return item.images?.[0];
+};
+
+const getChip = (item, config) => item.category || item.type || (item.published ? 'Publie' : 'Brouillon');
+
+const describeItem = (item) => item.description || item.excerpt || item.content?.replace(/<[^>]+>/g, '').slice(0, 130) || 'Aucune description pour le moment.';
+const previewImage = (draft, config) => {
+  const [file] = Array.from(draft.files || []);
+  if (file) return URL.createObjectURL(file);
+  return getImage(draft, config);
+};
 const SkeletonCards = () => (
   <div className="admin-stats-grid">
     {Array.from({ length: 12 }).map((_, index) => <span className="admin-skeleton-card" key={index} />)}
@@ -76,11 +136,7 @@ const StatCard = ({ meta, value }) => {
 };
 
 export const AdminOverview = () => {
-  const [stats, setStats] = useState(null);
-
-  useEffect(() => {
-    api.get('/admin/dashboard/stats').then(({ data }) => setStats(data));
-  }, []);
+  const { data: stats, isLoading } = useDashboard();
 
   return (
     <>
@@ -88,7 +144,7 @@ export const AdminOverview = () => {
         <h1>Dashboard</h1>
         <p>Vue d'ensemble de votre activite</p>
       </section>
-      {!stats ? <SkeletonCards /> : (
+      {isLoading || !stats ? <SkeletonCards /> : (
         <div className="admin-stats-grid">
           {statMeta.map((meta) => <StatCard key={meta[0]} meta={meta} value={stats[meta[0]]} />)}
         </div>
@@ -110,13 +166,24 @@ export const AdminResourcePage = ({ type }) => {
   const [loading, setLoading] = useState(true);
   const [query, setQuery] = useState('');
   const [draft, setDraft] = useState({});
+  const [error, setError] = useState('');
 
   const load = useCallback(async () => {
     setLoading(true);
-    const { data } = await api.get(`/admin/${config.resource}`);
-    setItems(data);
+    const params = {
+      category: config.category === 'goodies' ? undefined : config.category,
+      type: config.type,
+    };
+    const { data } = await api.get(`/${config.resource}`, { params });
+    const payload = data.data;
+    const rows = Array.isArray(payload) ? payload : payload.items || [];
+    setItems(rows.map((item) => ({
+      ...item,
+      customer: item.customer || item.user?.name,
+      email: item.email || item.user?.email,
+    })));
     setLoading(false);
-  }, [config.resource]);
+  }, [config.resource, config.category, config.type]);
 
   useEffect(() => {
     load();
@@ -131,20 +198,40 @@ export const AdminResourcePage = ({ type }) => {
 
   const save = async (event) => {
     event.preventDefault();
-    const payload = { ...draft, category: config.category === 'ceramique' ? 'ceramique' : draft.category || config.category, type: config.type || draft.type };
-    await api.post(`/admin/${config.resource}`, payload);
-    setDraft({});
-    load();
+    setError('');
+    try {
+      const payload = buildPayload(draft, config);
+      const body = buildRequestBody(payload, draft, config);
+      if (draft.id) await api.put(`/${config.resource}/${draft.id}`, body, requestConfig(config));
+      else await api.post(`/${config.resource}`, body, requestConfig(config));
+      setDraft({});
+      load();
+    } catch (err) {
+      setError(err.response?.data?.message || 'Enregistrement impossible');
+    }
   };
 
   const patchItem = async (id, patch) => {
-    await api.patch(`/admin/${config.resource}/${id}`, patch);
-    load();
+    setError('');
+    try {
+      if ('isRead' in patch) await api.patch(`/${config.resource}/${id}/read`);
+      else if ('published' in patch) await api.patch(`/${config.resource}/${id}/publish`);
+      else if (config.resource === 'products' && 'isActive' in patch) await api.patch(`/${config.resource}/${id}/toggle`);
+      else await api.patch(`/${config.resource}/${id}`, patch);
+      load();
+    } catch (err) {
+      setError(err.response?.data?.message || 'Mise a jour impossible');
+    }
   };
 
   const remove = async (id) => {
-    await api.delete(`/admin/${config.resource}/${id}`);
-    load();
+    setError('');
+    try {
+      await api.delete(`/${config.resource}/${id}`);
+      load();
+    } catch (err) {
+      setError(err.response?.data?.message || 'Suppression impossible');
+    }
   };
 
   return (
@@ -154,7 +241,9 @@ export const AdminResourcePage = ({ type }) => {
           <h1>{config.title}</h1>
           <p>Recherche, edition rapide et actions connectees a l'API.</p>
         </div>
-        <button className="admin-primary-action" onClick={() => setDraft({ name: '', title: '' })} type="button"><FiPlus /> Nouveau</button>
+        {config.creatable !== false && (
+          <button className="admin-primary-action" onClick={() => setDraft(defaultDraft(config))} type="button"><FiPlus /> {config.actionLabel || 'Nouveau'}</button>
+        )}
       </div>
 
       <div className="admin-toolbar">
@@ -164,15 +253,79 @@ export const AdminResourcePage = ({ type }) => {
 
       {Object.keys(draft).length > 0 && (
         <form className="admin-inline-form" onSubmit={save}>
-          {config.fields.slice(0, 3).map((field) => (
-            <input key={field} placeholder={field} value={draft[field] || ''} onChange={(event) => setDraft({ ...draft, [field]: event.target.value })} />
+          {(config.formFields || config.fields.slice(0, 3)).map((field) => (
+            field === 'description' || field === 'content' || field === 'excerpt' ? (
+              <textarea
+                key={field}
+                placeholder={field}
+                value={draft[field] || ''}
+                onChange={(event) => setDraft({ ...draft, [field]: event.target.value })}
+                required={field === 'content'}
+              />
+            ) : field === 'category' ? (
+              <select key={field} value={draft[field] || 'goodies'} onChange={(event) => setDraft({ ...draft, [field]: event.target.value })}>
+                <option value="goodies">Goodies</option>
+                <option value="lifestyle">Lifestyle</option>
+              </select>
+            ) : (
+              <input
+                key={field}
+                type={field.toLowerCase().includes('date') ? 'date' : ['price', 'stock', 'duration', 'maxParticipants'].includes(field) ? 'number' : 'text'}
+                placeholder={field}
+                value={draft[field] || ''}
+                onChange={(event) => setDraft({ ...draft, [field]: event.target.value })}
+                required={['name', 'title', 'price', 'date', 'duration', 'maxParticipants'].includes(field)}
+              />
+            )
           ))}
+          {config.photoUpload && (
+            <label className="admin-file-input">
+              <span>Ajouter des photos</span>
+              <input
+                type="file"
+                accept="image/*"
+                multiple={config.resource !== 'blogs'}
+                onChange={(event) => setDraft({ ...draft, files: event.target.files })}
+              />
+              <small>{draft.files?.length ? `${draft.files.length} photo(s) selectionnee(s)` : 'Cloudinary upload'}</small>
+            </label>
+          )}
+          {config.photoUpload && previewImage(draft, config) && (
+            <div className="admin-upload-preview">
+              <img src={previewImage(draft, config)} alt="Apercu" />
+            </div>
+          )}
           <button type="submit">Enregistrer</button>
         </form>
       )}
+      {error && <span className="admin-error">{error}</span>}
 
       {loading ? <div className="admin-list-skeleton" /> : (
-        <div className={config.calendar ? 'admin-calendar-grid' : 'admin-data-table'}>
+        <div className={config.cardView ? 'admin-card-grid' : config.calendar ? 'admin-calendar-grid' : 'admin-data-table'}>
+          {config.cardView && filtered.map((item) => (
+            <article className="admin-product-card" key={item.id}>
+              <div className="admin-product-image">
+                {getImage(item, config) ? <img src={getImage(item, config)} alt={item.name || item.title} /> : <span>Photo</span>}
+              </div>
+              <div className="admin-product-info">
+                <div className="admin-product-title-line">
+                  <h2>{item.name || item.title}</h2>
+                  {'price' in item && <strong>{money(item.price)}</strong>}
+                </div>
+                <span className="admin-product-chip">{getChip(item, config)}</span>
+                <p>{describeItem(item)}</p>
+                {config.resource === 'workshops' && (
+                  <small>{item.date ? new Date(item.date).toLocaleDateString('fr-FR') : '-'} · {item.enrolled || 0}/{item.maxParticipants || 0} participants</small>
+                )}
+              </div>
+              <div className="admin-card-actions">
+                <button type="button" onClick={() => setDraft({ ...item, date: item.date ? item.date.slice(0, 10) : todayForInput() })}>Modifier</button>
+                <button type="button" className="danger" onClick={() => remove(item.id)} aria-label="Supprimer"><FiTrash2 /></button>
+              </div>
+            </article>
+          ))}
+          {!config.cardView && (
+          <>
           {!config.calendar && (
             <div className="admin-table-row admin-table-head">
               {config.fields.map((field) => <span key={field}>{field}</span>)}
@@ -190,6 +343,8 @@ export const AdminResourcePage = ({ type }) => {
               </span>
             </article>
           ))}
+          </>
+          )}
         </div>
       )}
     </section>

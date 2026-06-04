@@ -1,4 +1,5 @@
 import { FaInstagram, FaPinterestP, FaTiktok } from 'react-icons/fa';
+import './SocialFloatingButtons.css';
 
 const SocialFloatingButtons = () => (
   <div className="social-floating" aria-label="Social links">

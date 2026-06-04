@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import { FiMenu, FiShoppingBag, FiUser, FiX } from 'react-icons/fi';
 import { navLeft, navRight } from '../data/siteData';
+import './Navbar.css';
 
 const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
@@ -25,7 +26,10 @@ const Navbar = () => {
         </div>
 
         <Link to="/" className="brand" aria-label="Cyramik home">
-          <img src="/logocof.png" alt="Coffee Arts Paris" />
+          <img
+            src={scrolled ? '/coffee-arts-scrolled-logo.png' : '/logocof.png'}
+            alt="Coffee Arts Paris"
+          />
         </Link>
 
         <div className="nav-group nav-group--right">
