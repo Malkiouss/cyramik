@@ -15,10 +15,16 @@ const shippingRoutes = require('./routes/shipping.routes');
 const { notFound, errorHandler } = require('./middleware/errorHandler');
 
 const app = express();
-const allowedOrigins = (process.env.CLIENT_URL || 'http://localhost:3000,http://localhost:5173')
+const defaultClientUrls = [
+  'http://localhost:3000',
+  'http://localhost:5173',
+  'https://cyramik.vercel.app',
+];
+
+const allowedOrigins = (process.env.CLIENT_URL || defaultClientUrls.join(','))
   .split(',')
   .map((origin) => origin.trim())
-  .filter(Boolean);
+  .filter((origin) => origin && origin !== '*');
 
 app.use(
   cors({

@@ -60,6 +60,16 @@ REACT_APP_API_URL=https://your-backend.vercel.app/api
 
 Redeploy the frontend after adding or changing `REACT_APP_API_URL`.
 
+For the current production domains, use:
+
+```env
+# Backend project
+CLIENT_URL=https://cyramik.vercel.app
+
+# Frontend project
+REACT_APP_API_URL=https://cyramik-back.vercel.app/api
+```
+
 ## 3. Link frontend and backend
 
 The two variables must point to each other:
