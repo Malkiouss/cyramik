@@ -49,6 +49,29 @@
   align-items: start;
 }
 
+.ceramique-products-section {
+  width: min(100%, 1180px);
+  margin: 0 auto 86px;
+}
+
+.ceramique-products-section .section-heading {
+  margin-bottom: 34px;
+}
+
+.ceramique-products-section .item-card {
+  border-radius: 10px;
+  background: rgba(255, 250, 241, 0.78);
+  box-shadow: 0 20px 54px rgba(69, 45, 30, 0.12);
+}
+
+.ceramique-products-section .item-card img {
+  height: 260px;
+}
+
+.ceramique-products-section .item-card p {
+  color: rgba(51, 37, 29, 0.7);
+}
+
 .ceramique-kicker {
   margin: 0 0 18px;
   color: rgba(51, 37, 29, 0.72);

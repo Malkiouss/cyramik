@@ -21,20 +21,20 @@ const defaultClientUrls = [
   'https://cyramik.vercel.app',
 ];
 
-const allowedOrigins = (process.env.CLIENT_URL || defaultClientUrls.join(','))
-  .split(',')
+const allowedOrigins = [...defaultClientUrls, ...(process.env.CLIENT_URL || '').split(',')]
   .map((origin) => origin.trim())
   .filter((origin) => origin && origin !== '*');
 
-app.use(
-  cors({
-    origin: (origin, callback) => {
-      if (!origin || allowedOrigins.includes(origin)) return callback(null, true);
-      return callback(new Error(`CORS origin not allowed: ${origin}`));
-    },
-    credentials: true,
-  })
-);
+const corsOptions = {
+  origin: (origin, callback) => {
+    if (!origin || allowedOrigins.includes(origin)) return callback(null, true);
+    return callback(new Error(`CORS origin not allowed: ${origin}`));
+  },
+  credentials: true,
+};
+
+app.use(cors(corsOptions));
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());

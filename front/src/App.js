@@ -15,6 +15,7 @@ import Engagements from './pages/Engagements';
 import Evenements from './pages/Evenements';
 import Home from './pages/Home';
 import NotFound from './pages/NotFound';
+import ProductDetail from './pages/ProductDetail';
 import './App.css';
 
 const queryClient = new QueryClient();
@@ -30,7 +31,9 @@ const AppShell = () => {
       <Route path="/" element={<Home />} />
       <Route path="/cafe" element={<Cafe />} />
       <Route path="/ceramique" element={<Ceramique />} />
+      <Route path="/ceramique/:id" element={<ProductDetail />} />
       <Route path="/boutique" element={<Boutique />} />
+      <Route path="/boutique/:id" element={<ProductDetail />} />
       <Route path="/evenements" element={<Evenements />} />
       <Route path="/blog" element={<Blog />} />
       <Route path="/blog/:slug" element={<Blog />} />

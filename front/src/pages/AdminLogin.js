@@ -1,14 +1,27 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { FiArrowLeft, FiEye, FiEyeOff } from 'react-icons/fi';
 import { useAuth } from '../hooks/useAuth';
 import './AdminLogin.css';
 
+const getApiUrl = () => {
+  const url = (process.env.REACT_APP_API_URL || 'http://localhost:5000/api').replace(/\/+$/, '');
+  return url.endsWith('/api') ? url : `${url}/api`;
+};
+
+const googleErrors = {
+  google_state: 'Session Google expiree. Reessayez.',
+  google_token: 'Google n a pas pu confirmer la connexion.',
+  google_profile: 'Profil Google indisponible.',
+  google_denied: 'Ce compte Google n est pas autorise.',
+};
+
 const AdminLogin = () => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const { login } = useAuth();
   const [form, setForm] = useState({ email: 'admin@coffeeartsparis.com', password: 'Admin1234!' });
-  const [error, setError] = useState('');
+  const [error, setError] = useState(googleErrors[searchParams.get('error')] || '');
   const [showPassword, setShowPassword] = useState(false);
 
   const submit = async (event) => {
@@ -20,6 +33,11 @@ const AdminLogin = () => {
     } catch (err) {
       setError(err.response?.data?.message || 'Connexion impossible');
     }
+  };
+
+  const continueWithGoogle = () => {
+    setError('');
+    window.location.href = `${getApiUrl()}/auth/google`;
   };
 
   return (
@@ -66,7 +84,7 @@ const AdminLogin = () => {
 
         <div className="login-separator"><span>OU</span></div>
 
-        <button className="google-login-button" type="button">
+        <button className="google-login-button" type="button" onClick={continueWithGoogle}>
           <span aria-hidden="true">G</span>
           Continuer avec Google
         </button>

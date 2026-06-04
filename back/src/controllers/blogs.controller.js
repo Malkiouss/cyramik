@@ -21,10 +21,14 @@ const uniqueSlug = async (title, ignoreId) => {
   return slug;
 };
 
+const canManageBlogs = (user) => ['admin', 'staff'].includes(user?.role);
+
 const listBlogs = asyncHandler(async (req, res) => {
-  const filter = {};
-  if (req.query.published === 'true') filter.published = true;
-  if (req.query.published === 'false') filter.published = false;
+  const filter = canManageBlogs(req.user) ? {} : { published: true };
+  if (canManageBlogs(req.user)) {
+    if (req.query.published === 'true') filter.published = true;
+    if (req.query.published === 'false') filter.published = false;
+  }
   const blogs = await Blog.find(filter).populate('author', 'name email').sort({ createdAt: -1 });
   sendSuccess(res, blogs.map(toClient));
 });
@@ -32,7 +36,7 @@ const listBlogs = asyncHandler(async (req, res) => {
 const getBlog = asyncHandler(async (req, res) => {
   const isObjectId = /^[a-f\d]{24}$/i.test(req.params.id);
   const blog = await Blog.findOne(isObjectId ? { _id: req.params.id } : { slug: req.params.id }).populate('author', 'name email');
-  if (!blog) throw notFound('Blog not found');
+  if (!blog || (!blog.published && !canManageBlogs(req.user))) throw notFound('Blog not found');
   sendSuccess(res, toClient(blog));
 });
 

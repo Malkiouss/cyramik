@@ -24,6 +24,21 @@ const protect = asyncHandler(async (req, res, next) => {
   next();
 });
 
+const optionalAuth = asyncHandler(async (req, res, next) => {
+  const token = req.cookies?.accessToken || (req.headers.authorization || '').replace(/^Bearer\s+/i, '');
+
+  if (!token) return next();
+
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const user = await User.findById(decoded.id).select('-password');
+    if (user && user.isActive) req.user = user;
+  } catch (error) {
+    req.user = undefined;
+  }
+  return next();
+});
+
 const requireRole = (...roles) => (req, res, next) => {
   if (!req.user || !roles.includes(req.user.role)) {
     const error = new Error('Forbidden');
@@ -35,6 +50,7 @@ const requireRole = (...roles) => (req, res, next) => {
 
 module.exports = {
   protect,
+  optionalAuth,
   adminOnly: requireRole('admin'),
   staffOrAdmin: requireRole('admin', 'staff'),
 };

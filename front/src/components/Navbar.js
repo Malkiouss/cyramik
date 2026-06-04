@@ -40,7 +40,7 @@ const Navbar = () => {
             <NavLink key={item.path} to={item.path}>{item.label}</NavLink>
           ))}
           <Link className="icon-link" to="/boutique" aria-label="Panier"><FiShoppingBag /></Link>
-          <Link className="icon-link" to="/client" aria-label="Compte"><FiUser /></Link>
+          <Link className="icon-link" to="/login" aria-label="Compte"><FiUser /></Link>
         </div>
 
         <button className="menu-toggle" onClick={() => setOpen((value) => !value)} aria-label="Menu">

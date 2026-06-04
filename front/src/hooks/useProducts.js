@@ -1,6 +1,7 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import api from '../api/axios';
 import { unwrap, useResourceCrud, useResourceList } from './useResource';
+import { isProductItem } from '../utils/catalog';
 
 const asFormData = (payload) => {
   if (payload instanceof FormData) return payload;
@@ -19,6 +20,7 @@ export const useProducts = (params = {}) => {
   const invalidate = () => queryClient.invalidateQueries({ queryKey: ['products'] });
   return {
     ...list,
+    data: (list.data || []).filter(isProductItem),
     ...crud,
     createWithImages: useMutation({
       mutationFn: async (payload) => unwrap(await api.post('/products', asFormData(payload), { headers: { 'Content-Type': 'multipart/form-data' } })),
@@ -34,3 +36,12 @@ export const useProducts = (params = {}) => {
     }),
   };
 };
+
+export const useProduct = (id) => useQuery({
+  queryKey: ['products', id],
+  queryFn: async () => {
+    const product = unwrap(await api.get(`/products/${id}`));
+    return isProductItem(product) ? product : null;
+  },
+  enabled: Boolean(id),
+});

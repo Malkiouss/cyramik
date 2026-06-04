@@ -1,9 +1,11 @@
 import { Link } from 'react-router-dom';
 import './BlogCard.css';
 
+const getBlogImage = (post) => post.coverImage || post.imageUrl || '/assets/exper1.jpg';
+
 const BlogCard = ({ post }) => (
   <article className="item-card blog-card">
-    <img src={post.imageUrl} alt={post.title} />
+    <img src={getBlogImage(post)} alt={post.title} />
     <div>
       <span>Journal du studio</span>
       <h3>{post.title}</h3>

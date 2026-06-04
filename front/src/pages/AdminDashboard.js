@@ -124,6 +124,7 @@ const requestConfig = () => undefined;
 
 const getImage = (item, config) => {
   if (config.resource === 'blogs') return item.coverImage;
+  if (config.resource === 'products') return item.images?.[0] || item.imageUrl;
   return item.images?.[0];
 };
 
@@ -431,7 +432,7 @@ export const AdminResourcePage = ({ type }) => {
         ) : (
         <div className={config.cardView ? 'admin-card-grid' : 'admin-data-table'}>
           {config.cardView && filtered.map((item) => (
-            <article className="admin-product-card" key={item.id}>
+            <article className={`admin-product-card ${config.resource === 'blogs' ? 'admin-blog-card' : ''}`} key={item.id}>
               <div className="admin-product-image">
                 {getImage(item, config) ? <img src={getImage(item, config)} alt={item.name || item.title} /> : <span>Photo</span>}
               </div>

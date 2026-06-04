@@ -67,7 +67,7 @@ For the current production domains, use:
 CLIENT_URL=https://cyramik.vercel.app
 
 # Frontend project
-REACT_APP_API_URL=https://cyramik-back.vercel.app/api
+REACT_APP_API_URL=https://cyramik-backend.vercel.app/api
 ```
 
 ## 3. Link frontend and backend
@@ -89,3 +89,18 @@ CLIENT_URL=https://coffee-arts-front.vercel.app,https://www.your-domain.com
 - If the frontend still calls localhost, check frontend `REACT_APP_API_URL` and redeploy.
 - If backend returns Mongo errors, check `MONGO_URI` and MongoDB Atlas network access.
 - If uploads fail, check Cloudinary variables.
+
+## 5. Vercel function crashes
+
+If Vercel shows `FUNCTION_INVOCATION_FAILED`, open the backend project logs and look for the first stack trace. For this API, the most common cause is the function failing before Express can respond.
+
+Check these backend environment variables:
+
+```env
+MONGO_URI=mongodb+srv://USER:PASSWORD@cluster.mongodb.net/cyramik
+JWT_SECRET=use_a_long_random_secret
+CLIENT_URL=https://cyramik.vercel.app
+NODE_ENV=production
+```
+
+If MongoDB Atlas is used, make sure Atlas Network Access allows Vercel connections. The API returns a JSON `503` for database connection failures so the function does not crash silently.

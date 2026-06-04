@@ -18,9 +18,10 @@ const parseBody = (body) => ({
 });
 
 const uploadImages = async (files = [], folder) => Promise.all(files.map((file) => uploadToCloudinary(file, folder)));
+const canManageProducts = (user) => ['admin', 'staff'].includes(user?.role);
 
 const listProducts = asyncHandler(async (req, res) => {
-  const filter = {};
+  const filter = canManageProducts(req.user) ? {} : { isActive: true };
   if (req.query.category) filter.category = req.query.category;
   const products = await Product.find(filter).sort({ createdAt: -1 });
   sendSuccess(res, products.map(toClient));
@@ -28,7 +29,7 @@ const listProducts = asyncHandler(async (req, res) => {
 
 const getProduct = asyncHandler(async (req, res) => {
   const product = await Product.findById(req.params.id);
-  if (!product) throw notFound('Product not found');
+  if (!product || (!product.isActive && !canManageProducts(req.user))) throw notFound('Product not found');
   sendSuccess(res, toClient(product));
 });
 

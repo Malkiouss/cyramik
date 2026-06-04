@@ -1,0 +1,129 @@
+.product-detail-page {
+  max-width: 1220px;
+  margin: 0 auto;
+  padding-left: 24px;
+  padding-right: 24px;
+  padding-bottom: 96px;
+}
+
+.product-detail-shell {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(320px, 0.95fr);
+  gap: 54px;
+  align-items: start;
+}
+
+.product-detail-gallery {
+  display: grid;
+  gap: 16px;
+}
+
+.product-detail-main-image,
+.product-detail-thumbs img {
+  width: 100%;
+  object-fit: cover;
+  background: #fff7ea;
+}
+
+.product-detail-main-image {
+  aspect-ratio: 1 / 1;
+  border-radius: 14px;
+}
+
+.product-detail-thumbs {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.product-detail-thumbs img {
+  aspect-ratio: 1 / 1;
+  border-radius: 10px;
+}
+
+.product-detail-copy {
+  display: grid;
+  gap: 18px;
+  padding-top: 18px;
+}
+
+.product-detail-copy h1 {
+  color: var(--olive);
+  font-size: clamp(2.6rem, 5vw, 5rem);
+}
+
+.product-detail-copy > strong {
+  color: var(--brown);
+  font-size: 1.45rem;
+}
+
+.product-detail-copy p {
+  margin: 0;
+  color: rgba(51, 37, 29, 0.72);
+  font-size: 1rem;
+  line-height: 1.8;
+}
+
+.product-detail-back {
+  width: fit-content;
+  color: var(--brown);
+  font-size: 0.86rem;
+  font-weight: 900;
+  text-decoration: none;
+}
+
+.product-detail-meta {
+  display: grid;
+  gap: 8px;
+  margin: 8px 0;
+  color: var(--olive);
+  font-weight: 800;
+}
+
+.product-detail-copy .btn {
+  width: fit-content;
+}
+
+.product-detail-copy .btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.58;
+}
+
+.product-detail-empty {
+  display: grid;
+  justify-items: center;
+  gap: 18px;
+  max-width: 680px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.product-detail-empty h1 {
+  color: var(--olive);
+  font-size: clamp(2.4rem, 5vw, 4.8rem);
+}
+
+.product-detail-empty p {
+  margin: 0;
+  color: rgba(51, 37, 29, 0.72);
+}
+
+.product-detail-shell--loading {
+  min-height: 420px;
+  border-radius: 14px;
+  background: linear-gradient(110deg, rgba(255, 250, 244, 0.58), rgba(255, 255, 255, 0.9), rgba(255, 250, 244, 0.58));
+}
+
+@media (max-width: 900px) {
+  .product-detail-shell {
+    grid-template-columns: 1fr;
+    gap: 34px;
+  }
+}
+
+@media (max-width: 680px) {
+  .product-detail-page {
+    padding-left: 18px;
+    padding-right: 18px;
+  }
+}

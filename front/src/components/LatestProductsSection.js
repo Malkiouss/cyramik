@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { useProducts } from '../hooks/useProducts';
+import { isProductItem } from '../utils/catalog';
 import './LatestProductsSection.css';
 
 const fallbackImage = '/assets/exper3.jpg';
@@ -18,7 +19,7 @@ const formatPrice = (price) => {
 
 const ProductPreviewCard = ({ product }) => (
   <article className="latest-product-card">
-    <Link className="latest-product-image" to="/boutique" aria-label={`Voir ${product.name}`}>
+    <Link className="latest-product-image" to={`/boutique/${product.id || product._id}`} aria-label={`Voir ${product.name}`}>
       <img src={getProductImage(product)} alt={product.name} />
     </Link>
     <div className="latest-product-body">
@@ -28,13 +29,15 @@ const ProductPreviewCard = ({ product }) => (
       </div>
       <p>{product.description || 'L’univers Coffee Arts Paris, a emporter avec vous.'}</p>
     </div>
-    <Link className="latest-product-more" to="/boutique">Voir plus</Link>
+    <Link className="latest-product-more" to={`/boutique/${product.id || product._id}`}>Voir plus</Link>
   </article>
 );
 
 const LatestProductsSection = () => {
   const { data: products = [], isLoading, isError } = useProducts();
-  const latestProducts = products.filter((product) => product.isActive !== false).slice(0, 3);
+  const latestProducts = products
+    .filter((product) => isProductItem(product) && product.isActive !== false && product.category !== 'ceramique')
+    .slice(0, 3);
 
   if (!isLoading && (isError || latestProducts.length === 0)) return null;
 
