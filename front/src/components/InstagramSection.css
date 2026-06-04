@@ -1,7 +1,8 @@
 .instagram-section {
-  max-width: 1220px;
+  width: 90%;
+  max-width: 1440px;
   margin: 0 auto;
-  padding: 18px 24px 100px;
+  padding: 18px 0 100px;
 }
 
 .instagram-heading {
@@ -41,7 +42,7 @@
 }
 
 .instagram-card {
-  width: min(100%, 680px);
+  width: 100%;
   margin: 0 auto;
   padding: 18px;
   border: 1px solid rgba(103, 80, 61, 0.12);
@@ -100,6 +101,7 @@
 .instagram-widget {
   display: grid;
   justify-items: center;
+  width: 100%;
   min-height: 420px;
   padding: 18px;
   border-radius: 14px;
@@ -114,7 +116,7 @@
 
 .instagram-embed .instagram-media,
 .instagram-widget > .instagram-media {
-  width: min(100%, 540px) !important;
+  width: 100% !important;
   min-width: 0 !important;
   margin: 0 auto !important;
   background: #fff !important;

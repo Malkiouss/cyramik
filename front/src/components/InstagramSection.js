@@ -2,8 +2,8 @@ import { useEffect, useState } from 'react';
 import { FaInstagram } from 'react-icons/fa';
 import './InstagramSection.css';
 
-const instagramUrl = 'https://www.instagram.com/bomo_coffee/';
-const instagramUsername = 'bomo_coffee';
+const instagramUrl = 'https://www.instagram.com/coffeearts.paris/';
+const instagramUsername = 'coffeearts.paris';
 const oEmbedUrl = `https://api.instagram.com/oembed/?url=${encodeURIComponent(instagramUrl)}`;
 
 const InstagramEmbedFallback = () => (

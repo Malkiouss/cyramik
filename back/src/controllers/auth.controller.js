@@ -137,6 +137,8 @@ const googleCallback = asyncHandler(async (req, res) => {
   });
 
   if (!tokenResponse.ok) {
+    const errorText = await tokenResponse.text();
+    console.error('Google OAuth token exchange failed:', tokenResponse.status, errorText);
     return res.redirect(`${clientUrl}/login?error=google_token`);
   }
 
@@ -146,6 +148,8 @@ const googleCallback = asyncHandler(async (req, res) => {
   });
 
   if (!profileResponse.ok) {
+    const errorText = await profileResponse.text();
+    console.error('Google OAuth profile fetch failed:', profileResponse.status, errorText);
     return res.redirect(`${clientUrl}/login?error=google_profile`);
   }
 
